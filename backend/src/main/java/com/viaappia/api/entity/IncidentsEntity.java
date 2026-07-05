@@ -33,26 +33,32 @@ public class IncidentsEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
     private String titulo;
     private String descricao;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PrioridadeIncidents prioridade;
 
+    @Column(name = "responsavel_email", nullable = false)
+    private String responsavel;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusIncidents status;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "incident_tags", joinColumns = @JoinColumn(name = "incident_id"))
-
-    @Column(name = "tag")
+    @CollectionTable(name = "incident_tags",joinColumns = @JoinColumn(name = "incident_id"))
+    @Column(name = "tag", nullable = false)
     private List<String> tags = new ArrayList<>();
 
     @CreationTimestamp
-    @Column(name = "data_abertura")
+    @Column(name = "data_abertura", updatable = false, nullable = false)
     private OffsetDateTime dataAbertura;
 
     @UpdateTimestamp
-    @Column(name = "data_atualizacao")
+    @Column(name = "data_atualizacao", nullable = false)
     private OffsetDateTime dataAtualizacao;
 }
+

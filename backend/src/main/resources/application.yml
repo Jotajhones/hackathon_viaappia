@@ -5,10 +5,12 @@ spring:
     web:
       pageable:
         page-serialization-mode: via-dto
+  config:
+    import: optional:file:.env[.properties]      
   datasource:
-    url: jdbc:postgresql://localhost:5432/incidents
-    username: postgres
-    password: 123
+    url: ${DB_POSTGRES_URL}
+    username: ${DB_POSTGRES_USERNAME}
+    password: ${DB_POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

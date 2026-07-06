@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.viaappia.api.Services.IncidentsServices;
+import com.viaappia.api.dto.IncidentsRequestDTO;
+import com.viaappia.api.dto.IncidentResponseDTO;
 import com.viaappia.api.dto.IncidentStatusDTO;
-import com.viaappia.api.entity.IncidentsEntity;
 import com.viaappia.api.entity.PrioridadeIncidents;
 import com.viaappia.api.entity.StatusIncidents;
 
@@ -30,42 +31,42 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/incidents")
 public class IncidentsController {
 
-    private final IncidentsServices is;
+    private final IncidentsServices incidentsServices;
 
     @GetMapping("")
-    public Page<IncidentsEntity> findAll(
+    public Page<IncidentResponseDTO> findAll(
             @RequestParam(required = false) StatusIncidents status,
             @RequestParam(required = false) PrioridadeIncidents prioridade,
             @RequestParam(required = false) String q,
             Pageable pageable) {
 
-        return this.is.findAllFiltered(status, prioridade, q, pageable);
+        return this.incidentsServices.findAllFiltered(status, prioridade, q, pageable);
     }
 
     @GetMapping("/{id}")
-    public IncidentsEntity findById(@PathVariable UUID id) {
-        return this.is.findById(id);
+    public IncidentResponseDTO findById(@PathVariable UUID id) {
+        return this.incidentsServices.findById(id);
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public IncidentsEntity create(@RequestBody IncidentsEntity incident) {
-        return this.is.create(incident);
+    public IncidentResponseDTO create(@RequestBody IncidentsRequestDTO incidentDto) {
+        return this.incidentsServices.create(incidentDto);
     }
 
     @PutMapping("/{id}")
-    public IncidentsEntity update(@PathVariable UUID id, @RequestBody IncidentsEntity incident) {
-        return this.is.update(id, incident);
+    public IncidentResponseDTO update(@PathVariable UUID id, @RequestBody IncidentsRequestDTO incidentDto) {
+        return this.incidentsServices.update(id, incidentDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
-        this.is.delete(id);
+        this.incidentsServices.delete(id);
     }
 
     @PatchMapping("/{id}/status")
     public IncidentStatusDTO getStatus(@PathVariable UUID id) {
-        return this.is.findStatusById(id);
+        return this.incidentsServices.findStatusById(id);
     }
 }

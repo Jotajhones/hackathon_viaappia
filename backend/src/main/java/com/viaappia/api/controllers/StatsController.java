@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/stats")
 public class StatsController {
 
-    private final StatsService is;
+    private final StatsService services;
 
     @GetMapping("/incidents") 
     public ResponseEntity<StatsDTO> getIncidentsStats() {
-        StatsDTO stats = this.is.getIncidentsStats();
+        StatsDTO stats = this.services.getIncidentsStats();
         return ResponseEntity.ok(stats);
     }
 }

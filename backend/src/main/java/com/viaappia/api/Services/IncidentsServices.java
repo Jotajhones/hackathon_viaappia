@@ -6,10 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.viaappia.api.dto.IncidentsRequestDTO;
+import com.viaappia.api.dto.IncidentResponseDTO;
 import com.viaappia.api.dto.IncidentStatusDTO;
 import com.viaappia.api.entity.IncidentsEntity;
 import com.viaappia.api.entity.PrioridadeIncidents;
 import com.viaappia.api.entity.StatusIncidents;
+import com.viaappia.api.mapper.IncidentMapper;
 import com.viaappia.api.repository.IncidentsRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,35 +21,42 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IncidentsServices {
 
-    private final IncidentsRepository ir;
+    private final IncidentsRepository incidentsRepository;
+    private final IncidentMapper mapper;
 
-    public Page<IncidentsEntity> findAllFiltered(StatusIncidents status, PrioridadeIncidents prioridade, String q,
+    public Page<IncidentResponseDTO> findAllFiltered(StatusIncidents status, PrioridadeIncidents prioridade, String q,
             Pageable pageable) {
         String termoBusca = (q != null && !q.isBlank()) ? "%" + q.toLowerCase() + "%" : null;
-        return this.ir.findWithFilters(status, prioridade, termoBusca, pageable);
+        return this.incidentsRepository.findWithFilters(status, prioridade, termoBusca, pageable).map(mapper::toDTO);
     }
 
-    public IncidentsEntity findById(UUID id) {
-        return this.ir.findById(id)
+    public IncidentResponseDTO findById(UUID id) {
+        IncidentsEntity entity = this.incidentsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Incidente não encontrado com o ID: " + id));
+        return mapper.toDTO(entity);
     }
 
-    public IncidentsEntity create(IncidentsEntity incident) {
-        return this.ir.save(incident);
+    public IncidentResponseDTO create(IncidentsRequestDTO incidentDto) {
+        IncidentsEntity entity = mapper.toEntity(incidentDto);
+        IncidentsEntity savedEntity = this.incidentsRepository.save(entity);
+        return mapper.toDTO(savedEntity);
     }
 
-    public IncidentsEntity update(UUID id, IncidentsEntity incident) {
-        incident.setId(id);
-        return this.ir.save(incident);
+    public IncidentResponseDTO update(UUID id, IncidentsRequestDTO incidentDto) {
+        IncidentsEntity entity = mapper.toEntity(incidentDto);
+        entity.setId(id);
+        IncidentsEntity updatedEntity = this.incidentsRepository.save(entity);
+        return mapper.toDTO(updatedEntity);
     }
 
     public void delete(UUID id) {
-        IncidentsEntity existente = findById(id);
-        this.ir.delete(existente);
+        IncidentsEntity existente = this.incidentsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Incidente não encontrado com o ID: " + id));
+        this.incidentsRepository.delete(existente);
     }
 
     public IncidentStatusDTO findStatusById(UUID id) {
-        return this.ir.findIncidentById(id)
+        return this.incidentsRepository.findIncidentById(id)
                 .orElseThrow(() -> new RuntimeException("Incidente não encontrado"));
     }
 

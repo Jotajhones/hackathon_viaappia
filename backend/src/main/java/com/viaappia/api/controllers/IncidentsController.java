@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.viaappia.api.Services.IncidentsServices;
+import com.viaappia.api.dto.IncidentStatusDTO;
 import com.viaappia.api.entity.IncidentsEntity;
 import com.viaappia.api.entity.PrioridadeIncidents;
 import com.viaappia.api.entity.StatusIncidents;
@@ -60,5 +62,10 @@ public class IncidentsController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         this.is.delete(id);
+    }
+
+    @PatchMapping("/{id}/status")
+    public IncidentStatusDTO getStatus(@PathVariable UUID id) {
+        return this.is.findStatusById(id);
     }
 }

@@ -1,6 +1,7 @@
 package com.viaappia.api.repository;
 
 import java.util.UUID;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.viaappia.api.dto.IncidentStatusDTO;
 import com.viaappia.api.entity.IncidentsEntity;
 import com.viaappia.api.entity.PrioridadeIncidents;
 import com.viaappia.api.entity.StatusIncidents;
@@ -24,4 +26,9 @@ public interface IncidentsRepository extends JpaRepository<IncidentsEntity, UUID
                         @Param("q") String q,
                         Pageable pageable);
 
+        Optional<IncidentStatusDTO> findIncidentById(UUID id);
+
+        long countByStatus(StatusIncidents status);
+
+        long countByPrioridade(PrioridadeIncidents prioridade);
 }

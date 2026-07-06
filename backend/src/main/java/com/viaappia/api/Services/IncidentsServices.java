@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.viaappia.api.dto.IncidentStatusDTO;
 import com.viaappia.api.entity.IncidentsEntity;
 import com.viaappia.api.entity.PrioridadeIncidents;
 import com.viaappia.api.entity.StatusIncidents;
@@ -43,4 +44,10 @@ public class IncidentsServices {
         IncidentsEntity existente = findById(id);
         this.ir.delete(existente);
     }
+
+    public IncidentStatusDTO findStatusById(UUID id) {
+        return this.ir.findIncidentById(id)
+                .orElseThrow(() -> new RuntimeException("Incidente não encontrado"));
+    }
+
 }

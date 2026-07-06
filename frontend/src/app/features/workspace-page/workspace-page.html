@@ -1,1 +1,14 @@
-<p>workspace-page works!</p>
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; width: 1000px; margin: 20px auto;">
+    @for(incident of incidents(); track $index) {
+        <div style="border: 2px solid black; margin: 5px; padding: 5px; width: 250px;">
+            <div>{{incident.id}}</div>
+            <div>{{incident.titulo}}</div>
+            <div>{{incident.descricao}}</div>
+            <div>{{incident.prioridade}}</div>
+            <div>{{incident.tags}}</div>
+            <div>{{incident.responsavel}}</div>
+            <div>{{incident.dataAbertura}}</div>
+            <div>{{incident.dataAtualizacao}}</div>
+        </div>
+    }
+</div>

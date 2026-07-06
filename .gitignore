@@ -9,6 +9,6 @@ guia-spring.pdf
 melhorias.md
 cronograma_desenvolvimento.md
 catalogo_erros.json
-.vscode
+.vscode/
 .gitignore
 .env

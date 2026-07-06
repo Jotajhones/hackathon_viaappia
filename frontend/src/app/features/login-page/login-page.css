@@ -1,0 +1,100 @@
+.login-background {
+    min-height: 100vh;
+    width: 100%;
+    background: url('../../../../public/fundo-login.webp') no-repeat center fixed;
+    background-size: cover;
+}
+
+h1 {
+    position: fixed;
+    top: 50%;
+    left: calc(600px - 40%);
+    z-index: 0;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.titulo-inferior {
+    top: calc(50% + 3.5rem);
+}
+
+.container-imgs {
+    position: fixed;
+    top: calc(50% - 10rem);
+    left: calc(600px - 40%);
+    z-index: 0;
+}
+
+.container-imgs img {
+    max-width: 256px;
+    width: 100%;
+    margin-inline: 20px;
+}
+
+.login-container {
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    max-width: 600px;
+    width: 100%;
+    min-height: 100vh;
+    position: absolute;
+    right: 0;
+    z-index: 1;
+}
+
+label {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-inline: 20px;
+    align-items: flex-start;
+    justify-content: center;
+    margin-block: 10px;
+}
+
+.login-input {
+    width: 100%;
+    height: 35px;
+    outline: none;
+    border: none;
+    border-bottom: 2px solid #6990be;
+    background-color: #ebf1f5;
+    padding-inline: 8px;
+    transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.login-input:focus {
+    border: 2px solid #005ccb;
+    background-color: #c7ddee;
+}
+
+.login-button {
+    max-width: 250px;
+    width: 90%;
+    height: 40px;
+    font-size: larger;
+}
+
+@media (min-width: 1367px) and (max-width: 1800px) {
+    h1, .container-imgs {
+        left: 15%;
+    }
+    
+    /* .login-container {
+        right: 15%;
+    } */
+}
+
+@media (min-width: 1801px) {
+    .login-background > * {
+        display: none;
+    }
+}

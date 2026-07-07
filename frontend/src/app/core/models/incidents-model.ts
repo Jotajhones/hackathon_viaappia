@@ -1,6 +1,6 @@
-export type IncidentsPrioridade = 'BAIXA' | 'MEDIA' | 'ALTA' | 'CRITICA';
+export type IncidentsPrioridade = 'BAIXA' | 'MEDIA' | 'ALTA';
 
-export type IncidentStatus = 'ABERTA' | 'EM_ANDAMENTO' | 'EM_REVISAO' | 'FECHADA';
+export type IncidentStatus = 'ABERTA' | 'EM_ANDAMENTO' | 'RESOLVIDA' | 'CANCELADA';
 
 export interface Incidents {
     id: string;

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { MainLayout } from './layout/main-layout/main-layout';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -7,11 +8,19 @@ export const routes: Routes = [
         loadComponent: () => import('./features/login-page/login-page').then(m => m.LoginPage)
     },
     {
-        path: 'workspace',
-        loadComponent: () => import('./features/workspace-page/workspace-page').then(m => m.WorkspacePage)
-    },
-    { 
-        path: '**', 
-        loadComponent:() => import('./features/notfound-page/notfound-page').then(m => m.NotfoundPage) 
+        path: '',
+        component: MainLayout,
+        children: [
+
+            {
+                path: 'workspace',
+                loadComponent: () => import('./features/workspace-page/workspace-page').then(m => m.WorkspacePage)
+            },
+            {
+                path: '**',
+                loadComponent: () => import('./features/notfound-page/notfound-page').then(m => m.NotfoundPage)
+            }
+        ],
+
     }
 ];

@@ -1,0 +1,15 @@
+<header>
+    <img src="document.png" alt="icone de pasta arquivo azul">
+
+    <nav>
+        <ul>
+            <li><a routerLink="/workspace" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}">Workspace</a>
+            </li>
+
+            <li [class.hidden]="!rlaComentarios.isActive">
+                <a routerLink="/comments" routerLinkActive="active" #rlaComentarios="routerLinkActive">Comentários</a>
+            </li>
+        </ul>
+    </nav>
+</header>

@@ -1,0 +1,41 @@
+header {
+    background-color: var(--ui-bg-color);
+    width: 100%;
+    padding: 5px 10px;
+    border-bottom: 2px solid var(--ui-sec);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 3px 0px 3px 3px rgba(0, 0, 0, 0.2);
+}
+
+header img {
+    width: 32px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--ui-sec);
+    font-weight: bold;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: var(--ui-sec-hover);
+    transform: scale(1.08);
+}
+
+nav ul li a.active {
+    border-bottom: 2px solid var(--ui-sec-focus);
+}
+
+.hidden {
+    display: none;
+}

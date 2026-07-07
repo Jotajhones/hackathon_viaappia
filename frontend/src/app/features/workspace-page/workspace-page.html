@@ -1,14 +1,100 @@
-<div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; width: 1000px; margin: 20px auto;">
-    @for(incident of incidents(); track $index) {
-        <div style="border: 2px solid black; margin: 5px; padding: 5px; width: 250px;">
-            <div>{{incident.id}}</div>
-            <div>{{incident.titulo}}</div>
-            <div>{{incident.descricao}}</div>
-            <div>{{incident.prioridade}}</div>
-            <div>{{incident.tags}}</div>
-            <div>{{incident.responsavel}}</div>
-            <div>{{incident.dataAbertura}}</div>
-            <div>{{incident.dataAtualizacao}}</div>
+<header class="filter-container">
+    <div class="align-container">
+        <div class="filter-box">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
         </div>
-    }
+
+        <div class="searchbar">
+            <input type="search" placeholder="Pesquisar...">
+            <img src="lupa.png" alt="Ícone de uma lupa">
+        </div>
+    </div>
+</header>
+
+<div class="workspace-page">
+    <form>
+        <div class="form-header">
+            <label>#
+                <input type="text" formControlName="id" placeholder="0000" disabled>
+            </label>
+            <label>Abertura
+                <input type="datetime-local" formControlName="dataAbertura" disabled>
+            </label>
+            <label>Última Atualização
+                <input type="datetime-local" formControlName="dataAtualizacao" disabled>
+            </label>
+        </div>
+
+        <div class="form-input-group">
+            <label>Título
+                <input type="text" formControlName="titulo" placeholder="Digite o título">
+            </label>
+            <label>Responsável:
+                <input type="email" formControlName="responsavel" placeholder="nome@email.com">
+            </label>
+        </div>
+
+        <div class="form-select-group">
+            <label>Prioridade:
+                <select formControlName="prioridade">
+                    <option value="" selected disabled>Selecione um valor</option>
+                    <option value="BAIXA">Baixa</option>
+                    <option value="MEDIA">Média</option>
+                    <option value="ALTA">Alta</option>
+                </select>
+            </label>
+
+            <label>Status:
+                <select formControlName="status">
+                    <option value="" selected disabled>Selecione um valor</option>
+                    <option value="ABERTA">Aberta</option>
+                    <option value="EM_ANDAMENTO">Em Andamento</option>
+                    <option value="RESOLVIDA">Resolvida</option>
+                    <option value="CANCELADA">Cancelada</option>
+                </select>
+            </label>
+        </div>
+
+        <label>Descrição:
+            <textarea formControlName="descricao" placeholder="Digite a descrição aqui..."></textarea>
+        </label>
+        <label>Tags:
+            <textarea formControlName="tags" placeholder="Digite as tags separando por virgula para editar"></textarea>
+        </label>
+
+        <div class="form-button-container">
+            <button type="button" class="button">button</button>
+            <button type="button" class="button">button</button>
+            <button type="button" class="button">button</button>
+            <button type="button" class="button">button</button>
+        </div>
+    </form>
+
+    <div class="incidents-container">
+        <div class="incidents-container-head">
+            <h3>Tickets Recentes</h3>
+        </div>
+
+        <div class="incidents-list">
+            @for(incident of incidents(); track incident.id) {
+            <div class="incident-card">
+                <div class="card-header">
+                    <span class="card-id">#{{incident.id}}</span>
+                    <span class="card-status">{{incident.prioridade}}</span>
+                </div>
+
+                <div class="card-title">{{incident.titulo}}</div>
+                <div class="card-desc">{{incident.descricao}}</div>
+                <div class="card-tags">{{incident.tags}}</div>
+
+                <div class="card-footer">
+                    <span>{{incident.responsavel}}</span>
+                    <span>{{incident.dataAtualizacao | date:'dd/MM/yyyy HH:mm'}}</span>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
 </div>

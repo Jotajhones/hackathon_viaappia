@@ -1,10 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Incidents } from '../../core/models/incidents-model';
 import { IncidentsService } from '../../core/services/incidents-service'
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-workspace-page',
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './workspace-page.html',
   styleUrl: './workspace-page.css',
 })

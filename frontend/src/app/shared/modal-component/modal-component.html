@@ -1,0 +1,24 @@
+@if (modalService.isOpen()) {
+  <div class="modal-overlay">
+    
+    <div class="modal-content" [ngClass]="{'is-loading': modalService.modalData()?.tipo === 'loading'}">
+      
+      @if (modalService.modalData()?.tipo !== 'loading') {
+        <div class="modal-header" [ngClass]="modalService.modalData()?.tipo">
+          <h2>{{ modalService.modalData()?.titulo }}</h2>
+        </div>
+      }
+
+      <div class="modal-body" [ngClass]="{'loading-text': modalService.modalData()?.tipo === 'loading'}">
+        <p>{{ modalService.modalData()?.mensagem }}</p>
+      </div>
+
+      @if (modalService.modalData()?.tipo !== 'loading') {
+        <div class="modal-footer">
+          <button type="button" class="button" (click)="modalService.fechar()">Fechar</button>
+        </div>
+      }
+
+    </div>
+  </div>
+}

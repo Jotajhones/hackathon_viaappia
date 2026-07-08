@@ -75,3 +75,12 @@ input[type="email"]:focus {
     border: 2px solid var(--ui-sec);
     background-color: var(--ui-sec-focus-2);
 }
+
+.input-error {
+    border-color: red !important;
+    background-color: rgb(219, 191, 191) !important;
+}
+
+label:has(.input-error) {
+    color: #d32f2f !important;
+}

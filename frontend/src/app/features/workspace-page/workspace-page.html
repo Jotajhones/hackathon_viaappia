@@ -14,31 +14,34 @@
 </header>
 
 <div class="workspace-page">
-    <form>
+    <form [formGroup]="incident">
         <div class="form-header">
             <label>#
-                <input type="text" formControlName="id" placeholder="0000" disabled>
+                <input type="text" formControlName="id" placeholder="0000">
             </label>
             <label>Abertura
-                <input type="datetime-local" formControlName="dataAbertura" disabled>
+                <input type="datetime-local" formControlName="dataAbertura" locale="pt-br">
             </label>
             <label>Última Atualização
-                <input type="datetime-local" formControlName="dataAtualizacao" disabled>
+                <input type="datetime-local" formControlName="dataAtualizacao">
             </label>
         </div>
 
         <div class="form-input-group">
             <label>Título
-                <input type="text" formControlName="titulo" placeholder="Digite o título">
+                <input type="text" formControlName="titulo" placeholder="Digite o título"
+                    [ngClass]="{'input-error': incident.get('titulo')?.invalid && incident.get('titulo')?.touched}">
             </label>
             <label>Responsável:
-                <input type="email" formControlName="responsavel" placeholder="nome@email.com">
+                <input type="email" formControlName="responsavel" placeholder="nome@email.com"
+                    [ngClass]="{'input-error': incident.get('responsavel')?.invalid && incident.get('responsavel')?.touched}">
             </label>
         </div>
 
         <div class="form-select-group">
             <label>Prioridade:
-                <select formControlName="prioridade">
+                <select formControlName="prioridade"
+                    [ngClass]="{'input-error': incident.get('prioridade')?.invalid && incident.get('prioridade')?.touched}">
                     <option value="" selected disabled>Selecione um valor</option>
                     <option value="BAIXA">Baixa</option>
                     <option value="MEDIA">Média</option>
@@ -47,7 +50,8 @@
             </label>
 
             <label>Status:
-                <select formControlName="status">
+                <select formControlName="status"
+                    [ngClass]="{'input-error': incident.get('status')?.invalid && incident.get('status')?.touched}">
                     <option value="" selected disabled>Selecione um valor</option>
                     <option value="ABERTA">Aberta</option>
                     <option value="EM_ANDAMENTO">Em Andamento</option>
@@ -58,17 +62,21 @@
         </div>
 
         <label>Descrição:
-            <textarea formControlName="descricao" placeholder="Digite a descrição aqui..."></textarea>
+            <textarea formControlName="descricao" placeholder="Digite a descrição aqui..."
+                [ngClass]="{'input-error': incident.get('descricao')?.invalid && incident.get('descricao')?.touched}"></textarea>
         </label>
         <label>Tags:
             <textarea formControlName="tags" placeholder="Digite as tags separando por virgula para editar"></textarea>
         </label>
 
         <div class="form-button-container">
-            <button type="button" class="button">button</button>
-            <button type="button" class="button">button</button>
-            <button type="button" class="button">button</button>
-            <button type="button" class="button">button</button>
+            @if(btnController) {
+            <button type="button" class="button" [disabled]="incident.invalid" (click)="incidentsCreate()">Salvar</button>
+            } @else {
+            <button type="button" class="button" (click)="resetForm()">Limpar</button>
+            <button type="button" class="button">Alterar</button>
+            <button type="button" class="button delete">Excluir</button>
+            }
         </div>
     </form>
 
@@ -78,8 +86,8 @@
         </div>
 
         <div class="incidents-list">
-            @for(incident of incidents(); track incident.id) {
-            <div class="incident-card">
+            @for(incident of incidentsList(); track incident.id) {
+            <div class="incident-card" (click)="selectIncident(incident)">
                 <div class="card-header">
                     <span class="card-id">#{{incident.id}}</span>
                     <span class="card-status">{{incident.prioridade}}</span>
@@ -91,7 +99,8 @@
 
                 <div class="card-footer">
                     <span>{{incident.responsavel}}</span>
-                    <span>{{incident.dataAtualizacao | date:'dd/MM/yyyy HH:mm'}}</span>
+                    <span>Abertura - {{formatarTempo(incident.dataAbertura)}}</span>
+                    <span>Última Atualização - {{formatarTempo(incident.dataAtualizacao )}}</span>
                 </div>
             </div>
             }

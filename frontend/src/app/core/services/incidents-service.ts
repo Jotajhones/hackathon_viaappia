@@ -14,4 +14,8 @@ export class IncidentsService {
     findAll(): Observable<Incidents[]> {
         return this.http.get<Incidents[]>(this.apiUrl);
     }
+
+    create(incident: any){
+        return this.http.post(this.apiUrl, incident);
+    } 
 }

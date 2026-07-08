@@ -26,13 +26,11 @@ export class IncidentsService {
 
     update(incident: any) {
         let url = this.apiUrl+"/"+incident.id;
-        console.log(url)
         return this.http.put(url, incident);
     }
 
     delete(id: any) {
         let url = this.apiUrl+"/"+id;
-        console.log(url)
         return this.http.delete(url);
     }
 }

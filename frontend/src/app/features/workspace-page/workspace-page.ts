@@ -75,7 +75,6 @@ export class WorkspacePage implements OnInit {
 
 
   buscarNovaPagina(novaPagina: number) {
-    console.log(`O HTML pediu para ir para a página: ${novaPagina}`);
     this.paginaAtual = novaPagina;
     this.incidentsFindAll();
   }

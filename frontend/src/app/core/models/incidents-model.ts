@@ -6,6 +6,7 @@ export interface Incidents {
     id: string;
     titulo: string;
     descricao: string;
+    status: IncidentStatus;
     prioridade: IncidentsPrioridade;
     responsavel: string;
     tags: string[];

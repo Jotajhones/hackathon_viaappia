@@ -1,5 +1,6 @@
 package com.viaappia.api.Services;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -43,9 +44,20 @@ public class IncidentsServices {
     }
 
     public IncidentResponseDTO update(UUID id, IncidentsRequestDTO incidentDto) {
-        IncidentsEntity entity = mapper.toEntity(incidentDto);
-        entity.setId(id);
-        IncidentsEntity updatedEntity = this.incidentsRepository.save(entity);
+        IncidentsEntity existingEntity = this.incidentsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Incidente não encontrado"));
+
+        existingEntity.setTitulo(incidentDto.titulo());
+        existingEntity.setDescricao(incidentDto.descricao());
+        existingEntity.setPrioridade(incidentDto.prioridade());
+        existingEntity.setStatus(incidentDto.status());
+        existingEntity.setTags(incidentDto.tags());
+        existingEntity.setResponsavel(incidentDto.responsavel());
+
+        existingEntity.setDataAtualizacao(OffsetDateTime.now());
+
+        IncidentsEntity updatedEntity = this.incidentsRepository.save(existingEntity);
+
         return mapper.toDTO(updatedEntity);
     }
 

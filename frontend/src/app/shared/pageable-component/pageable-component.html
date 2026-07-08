@@ -1,0 +1,25 @@
+<div class="paginador-container">
+  <span class="total-itens">Total: {{ totalItens() }} itens</span>
+  
+  <div class="paginador-controles">
+    <button (click)="anterior()" [disabled]="paginaAtual() === 0">
+      <img src="angle-small-left.png" alt="Seta apontando para esquerda">
+    </button>
+    
+    <span class="pagina-info">
+      Página 
+      <input 
+        type="number" 
+        [value]="paginaAtual() + 1" 
+        min="1" 
+        [max]="totalPaginas()"
+        (change)="irParaPagina($event)"
+      > 
+      de {{ totalPaginas() }}
+    </span>
+    
+    <button (click)="proxima()" [disabled]="paginaAtual() >= totalPaginas() - 1">
+     <img src="angle-small-right.png" alt="Seta apontando para direita">
+    </button>
+  </div>
+</div>

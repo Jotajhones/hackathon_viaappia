@@ -67,16 +67,17 @@
         </label>
         <label>Tags:
             <textarea formControlName="tags" placeholder="Digite as tags separando por virgula para editar"
-            [ngClass]="{'input-error': incident.get('tags')?.invalid && incident.get('tags')?.touched}"></textarea>
+                [ngClass]="{'input-error': incident.get('tags')?.invalid && incident.get('tags')?.touched}"></textarea>
         </label>
 
         <div class="form-button-container">
             @if(btnController) {
-            <button type="button" class="button" [disabled]="incident.invalid" (click)="incidentsCreate()">Salvar</button>
+            <button type="button" class="button" [disabled]="incident.invalid"
+                (click)="incidentsCreate()">Salvar</button>
             } @else {
             <button type="button" class="button" (click)="resetForm()">Limpar</button>
-            <button type="button" class="button">Alterar</button>
-            <button type="button" class="button delete">Excluir</button>
+            <button type="button" class="button" (click)="incidentsUpdate()">Alterar</button>
+            <button type="button" class="button delete" (click)="incidentDelete()">Excluir</button>
             }
         </div>
     </form>
@@ -84,14 +85,29 @@
     <div class="incidents-container">
         <div class="incidents-container-head">
             <h3>Tickets Recentes</h3>
-        </div>
 
+            <app-pageable-component [paginaAtual]="paginaAtual" [totalPaginas]="totalPaginas" [totalItens]="totalItens"
+                (mudarPagina)="buscarNovaPagina($event)">
+            </app-pageable-component>
+
+        </div>
         <div class="incidents-list">
             @for(incident of incidentsList(); track incident.id) {
             <div class="incident-card" (click)="selectIncident(incident)">
                 <div class="card-header">
-                    <span class="card-id">#{{incident.id}}</span>
-                    <span class="card-status">{{incident.prioridade}}</span>
+                    <span class="card-id-status">
+                        <span class="cars-status">
+                            {{tratamentoString(incident.status)}}</span>
+                        <span class="card-id">#{{incident.id}}</span>
+                    </span>
+
+                    @if(incident.status !== "CANCELADA" && incident.status !== "RESOLVIDA") {
+
+                        <span class="card-prioridade-line">
+                            <span class="card-prioridade">{{incident.prioridade}}</span>
+                            <div class="card-prioridade-tag" [ngClass]="incident.prioridade"></div>
+                        </span>
+                    }
                 </div>
 
                 <div class="card-title">{{incident.titulo}}</div>
@@ -106,5 +122,6 @@
             </div>
             }
         </div>
+
     </div>
 </div>

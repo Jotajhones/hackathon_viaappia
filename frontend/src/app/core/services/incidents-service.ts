@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Incidents } from '../models/incidents-model';
 import { environment } from '../../../environments/environment';
@@ -12,11 +12,27 @@ export class IncidentsService {
     private http = inject(HttpClient);
     private apiUrl = environment.API_URL;
 
-    findAll(): Observable<Incidents[]> {
-        return this.http.get<Incidents[]>(this.apiUrl);
+    findAll(page: number = 0, size: number = 20): Observable<any> {
+
+        const params = new HttpParams()
+            .set('page', page)
+            .set('size', size);
+        return this.http.get<any>(this.apiUrl, { params });
     }
 
-    create(incident: any){
+    create(incident: any) {
         return this.http.post(this.apiUrl, incident);
-    } 
+    }
+
+    update(incident: any) {
+        let url = this.apiUrl+"/"+incident.id;
+        console.log(url)
+        return this.http.put(url, incident);
+    }
+
+    delete(id: any) {
+        let url = this.apiUrl+"/"+id;
+        console.log(url)
+        return this.http.delete(url);
+    }
 }

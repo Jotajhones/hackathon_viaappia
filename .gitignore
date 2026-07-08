@@ -1,4 +1,6 @@
 # root
+.vscode/
+
 desafio.pdf
 prazos.md
 prazos.pdf
@@ -9,5 +11,4 @@ guia-spring.pdf
 melhorias.md
 cronograma_desenvolvimento.md
 catalogo_erros.json
-.vscode/
 .env

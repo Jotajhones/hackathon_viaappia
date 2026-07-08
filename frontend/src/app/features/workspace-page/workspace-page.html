@@ -66,7 +66,8 @@
                 [ngClass]="{'input-error': incident.get('descricao')?.invalid && incident.get('descricao')?.touched}"></textarea>
         </label>
         <label>Tags:
-            <textarea formControlName="tags" placeholder="Digite as tags separando por virgula para editar"></textarea>
+            <textarea formControlName="tags" placeholder="Digite as tags separando por virgula para editar"
+            [ngClass]="{'input-error': incident.get('tags')?.invalid && incident.get('tags')?.touched}"></textarea>
         </label>
 
         <div class="form-button-container">

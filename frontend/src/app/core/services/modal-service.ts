@@ -2,10 +2,10 @@ import { Injectable, signal } from "@angular/core";
 import { DataModal } from "../models/modal-model";
 
 @Injectable({
-  providedIn: 'root' // Torna o serviço global e exportável para qualquer lugar
+  providedIn: 'root' 
 })
 export class ModalService {
-  // Usando Angular Signals para controlar o estado (recurso moderno e limpo)
+
   modalData = signal<DataModal | null>(null);
   isOpen = signal<boolean>(false);
 

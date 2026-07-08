@@ -53,7 +53,7 @@ export class WorkspacePage implements OnInit {
       Validators.maxLength(255)
     ]),
 
-    tags: new FormControl('', []),
+    tags: new FormControl('', [Validators.required]),
 
     dataAbertura: new FormControl({ value: '', disabled: true }, [
       Validators.required

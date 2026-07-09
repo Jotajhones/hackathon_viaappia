@@ -9,7 +9,9 @@
                 <span class="incident-title">{{incident().titulo}}</span>
 
                 @if(incident().status !== "CANCELADA" && incident().status !== "RESOLVIDA") {
-                <div class="prioridade-tag" [ngClass]="incident().prioridade"></div>
+                <div 
+                class="prioridade-tag" 
+                [ngClass]="incident().prioridade"></div>
                 }
 
                 <span class="header-status">{{tratamentoString(incident().status)}}</span>
@@ -37,16 +39,32 @@
             <h3>Novo Comentário</h3>
         </div>
 
-        <form class="comment-form">
+        <form 
+        class="comment-form" 
+        [formGroup]="comment">
+
             <div class="form-group">
                 <label for="comment-text">Escreva seu comentário ou nota técnica:</label>
-                <textarea id="comment-text"
-                    placeholder="Digite aqui o histórico ou atualização do incidente..."></textarea>
+
+                <input 
+                type="text" 
+                formControlName="autor" 
+                placeholder="Digite o nome do autor ou setor"
+                [ngClass]="{'input-error': comment.get('autor')?.invalid && comment.get('autor')?.touched}">
+
+                <textarea 
+                id="comment-text"
+                formControlName="mensagem"
+                placeholder="Digite aqui o histórico ou atualização do incidente..."
+                [ngClass]="{'input-error': comment.get('mensagem')?.invalid && comment.get('mensagem')?.touched}"></textarea>
             </div>
 
             <div class="form-button-container">
-                <button type="button" class="button button-commets">Adicionar Comentário</button>
-                <button type="button" class="button button-commets">Limpar</button>
+                <button 
+                type="button" 
+                class="button button-commets" 
+                (click)="createComment()" 
+                [disabled]="comment.invalid">Adicionar Comentário</button>
             </div>
         </form>
     </section>
@@ -54,7 +72,11 @@
     <section class="incidents-container">
         <div class="container-head">
             <h3>Histórico de Comentários</h3>
-            <app-pageable-component></app-pageable-component>
+            <app-pageable-component 
+            [paginaAtual]="paginaAtual" 
+            [totalPaginas]="totalPaginas" 
+            [totalItens]="totalItens"
+            (mudarPagina)="buscarNovaPagina($event)"></app-pageable-component>
         </div>
 
         <div class="incidents-list">
@@ -63,9 +85,20 @@
             <div class="incident-card">
                 <div class="card-header">
                     <span class="card-autor">{{comment.autor}}</span>
-                    <span class="card-date">{{comment.dataCriacao | date:'d MMM yy - hh:mm'}}</span>
+                    <span class="card-date">{{comment.dataCriacao | date:'d MMM yy - HH:mm'}}</span>
                 </div>
                 <div class="card-desc">{{comment.mensagem}}</div>
+                <div class="card-footer">
+                    <span></span>
+                </div>
+            </div>
+            } @empty {
+            <div class="incident-card">
+                <div class="card-header">
+                    <span class="card-autor">Não Existem comentarios</span>
+                    <span class="card-date">{{dataAtual | date:'d MMM yy - HH:mm'}}</span>
+                </div>
+                <div class="card-desc">¯\_(ツ)_/¯</div>
                 <div class="card-footer">
                     <span></span>
                 </div>

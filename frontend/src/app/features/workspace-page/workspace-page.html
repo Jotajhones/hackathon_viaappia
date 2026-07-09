@@ -1,44 +1,102 @@
 <header class="filter-container">
     <div class="align-container">
-        <div class="filter-box">
-            <input type="checkbox">
-            <input type="checkbox">
-            <input type="checkbox">
-        </div>
+        
+        <form [formGroup]="filtrosForm" class="filter-box">
+    
+            <div class="filtro-grupo status-grupo">
+                <label for="statusSelect">Filtrar status:</label>
+                <select id="statusSelect" formControlName="status">
+                    <option [ngValue]="null">Todos</option>
+                    <option value="ABERTA">Aberta</option>
+                    <option value="CANCELADA">Cancelada</option>
+                    <option value="RESOLVIDA">Resolvida</option>
+                    <option value="EM_ANDAMENTO">Em Andamento</option>
+                </select>
+            </div>
 
-        <app-searchbar-component></app-searchbar-component>
+            <div class="filtro-grupo prioridade-grupo">
+                <label for="prioridadeSelect">Filtrar prioridade:</label>
+                <select id="prioridadeSelect" formControlName="prioridade">
+                    <option [ngValue]="null">Todas</option>
+                    <option value="ALTA">Alta</option>
+                    <option value="MEDIA">Média</option>
+                    <option value="BAIXA">Baixa</option>
+                </select>
+            </div>
+
+            <div class="filtro-grupo ordenacao-grupo">
+                <label for="dateSelect">Ordenar:</label>
+                <select id="dateSelect" formControlName="sort">
+                    <option [ngValue]="null">Limpar filtro</option>
+                    
+                    <optgroup label="Data de Abertura">
+                        <option value="dataAbertura,asc">Mais antiga primeiro (Crescente)</option>
+                        <option value="dataAbertura,desc">Mais recente primeiro (Decrescente)</option>
+                    </optgroup>
+                    
+                    <optgroup label="Data de Atualização">                    
+                        <option value="dataAtualizacao,asc">Mais antiga primeiro (Crescente)</option>
+                        <option value="dataAtualizacao,desc">Mais recente primeiro (Decrescente)</option>
+                    </optgroup>
+                </select>
+            </div>
+        </form>
+
+        <app-searchbar-component 
+        (termoBuscado)="receberBusca($event)">
+        </app-searchbar-component>
+        
     </div>
 </header>
 
 <div class="workspace-page">
+
     <form [formGroup]="incident">
         <div class="form-header">
             <label>#
-                <input type="text" formControlName="id" placeholder="0000">
+                <input 
+                type="text" 
+                formControlName="id" 
+                placeholder="0000">
             </label>
+
             <label>Abertura
-                <input type="datetime-local" formControlName="dataAbertura">
+                <input 
+                type="datetime-local" 
+                formControlName="dataAbertura">
             </label>
+
             <label>Última Atualização
-                <input type="datetime-local" formControlName="dataAtualizacao">
+                <input 
+                type="datetime-local" 
+                formControlName="dataAtualizacao">
             </label>
         </div>
 
         <div class="form-input-group">
             <label>Título
-                <input type="text" formControlName="titulo" placeholder="Digite o título"
-                    [ngClass]="{'input-error': incident.get('titulo')?.invalid && incident.get('titulo')?.touched}">
+                <input 
+                type="text" 
+                formControlName="titulo" 
+                placeholder="Digite o título"
+                [ngClass]="{'input-error': incident.get('titulo')?.invalid && incident.get('titulo')?.touched}">
             </label>
+
             <label>Responsável:
-                <input type="email" formControlName="responsavel" placeholder="nome@email.com"
-                    [ngClass]="{'input-error': incident.get('responsavel')?.invalid && incident.get('responsavel')?.touched}">
+                <input 
+                type="email" 
+                formControlName="responsavel" 
+                placeholder="nome@email.com"
+                [ngClass]="{'input-error': incident.get('responsavel')?.invalid && incident.get('responsavel')?.touched}">
             </label>
         </div>
 
         <div class="form-select-group">
             <label>Prioridade:
-                <select formControlName="prioridade"
-                    [ngClass]="{'input-error': incident.get('prioridade')?.invalid && incident.get('prioridade')?.touched}">
+                <select 
+                formControlName="prioridade"
+                [ngClass]="{'input-error': incident.get('prioridade')?.invalid && incident.get('prioridade')?.touched}">
+                    
                     <option value="" selected disabled>Selecione um valor</option>
                     <option value="BAIXA">Baixa</option>
                     <option value="MEDIA">Média</option>
@@ -47,8 +105,10 @@
             </label>
 
             <label>Status:
-                <select formControlName="status"
-                    [ngClass]="{'input-error': incident.get('status')?.invalid && incident.get('status')?.touched}">
+                <select 
+                formControlName="status"
+                [ngClass]="{'input-error': incident.get('status')?.invalid && incident.get('status')?.touched}">
+
                     <option value="" selected disabled>Selecione um valor</option>
                     <option value="ABERTA">Aberta</option>
                     <option value="EM_ANDAMENTO">Em Andamento</option>
@@ -59,23 +119,45 @@
         </div>
 
         <label>Descrição:
-            <textarea formControlName="descricao" placeholder="Digite a descrição aqui..."
-                [ngClass]="{'input-error': incident.get('descricao')?.invalid && incident.get('descricao')?.touched}"></textarea>
+            <textarea 
+            formControlName="descricao" 
+            placeholder="Digite a descrição aqui..."
+            [ngClass]="{'input-error': incident.get('descricao')?.invalid && incident.get('descricao')?.touched}"></textarea>
         </label>
+
         <label>Tags:
-            <textarea formControlName="tags" placeholder="Digite as tags separando por virgula para editar"
-                [ngClass]="{'input-error': incident.get('tags')?.invalid && incident.get('tags')?.touched}"></textarea>
+            <textarea 
+            formControlName="tags" 
+            placeholder="Digite as tags separando por virgula para editar"
+            [ngClass]="{'input-error': incident.get('tags')?.invalid && incident.get('tags')?.touched}"></textarea>
         </label>
 
         <div class="form-button-container">
             @if(btnController) {
-            <button type="button" class="button" [disabled]="incident.invalid"
-                (click)="incidentsCreate()">Salvar</button>
+            <button 
+            type="button" 
+            class="button" 
+            [disabled]="incident.invalid"
+            (click)="incidentsCreate()">Salvar</button>
             } @else {
-            <button type="button" class="button" (click)="resetForm()">Limpar</button>
-            <button type="button" class="button" (click)="incidentsUpdate()">Alterar</button>
-            <button type="button" class="button delete" (click)="incidentDelete()">Excluir</button>
+
+            <button 
+            type="button" class="button" 
+            (click)="resetForm()"
+            >Limpar</button>
+
+            <button 
+            type="button" 
+            class="button" 
+            (click)="incidentsUpdate()"
+            [disabled]="incident.invalid">Alterar</button>
+
+            <button 
+            type="button" 
+            class="button delete" 
+            (click)="incidentDelete()">Excluir</button>
             }
+            
         </div>
     </form>
 
@@ -117,6 +199,25 @@
                     <span>{{incident.responsavel}}</span>
                     <span>Abertura há {{formatarTempo(incident.dataAbertura)}}</span>
                     <span>Última Atualização há {{formatarTempo(incident.dataAtualizacao )}}</span>
+                </div>
+            </div>
+            } @empty {
+            <div class="incident-card">
+                <div class="card-header">
+                    <span class="card-id-status">
+                        <span class="card-status"></span>
+                        <span class="card-id">#-204-204-204-204</span>
+                    </span>
+                </div>
+
+                <div class="card-title">Ops! ¯\_(ツ)_/¯</div>
+                <div class="card-desc">Parece que não existe correspondência para a sua pesquisa</div>
+                <div class="card-tags">204</div>
+
+                <div class="card-footer">
+                    <span></span>
+                    <span></span>
+                    <span>Última atualização - {{dataAtual | date:'d MMM yy - HH:mm'}}</span>
                 </div>
             </div>
             }

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgClass } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { Incidents } from '../../core/models/incidents-model';
 import { IncidentsService } from '../../core/services/incidents-service';
 import { ModalService } from '../../core/services/modal-service';
@@ -13,7 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-workspace-page',
-  imports: [ReactiveFormsModule, NgClass, PageableComponent, SearchbarComponent],
+  imports: [ReactiveFormsModule, NgClass, PageableComponent, SearchbarComponent, DatePipe],
   templateUrl: './workspace-page.html',
   styleUrl: './workspace-page.css',
 })
@@ -22,16 +22,16 @@ export class WorkspacePage implements OnInit {
   private incidentsService = inject(IncidentsService);
   private modalService = inject(ModalService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
 
   incidentsList = signal<Incidents[]>([]);
-
+  termoDaBusca: string | null = null;
   btnController = true;
   incidetStatus: string = '';
   paginaAtual: number = 0;
-  tamanhoPagina: number = 20;
+  tamanhoPagina: number = 10;
   totalItens: number = 0;
   totalPaginas: number = 0;
+  dataAtual = new Date();
 
   incident = new FormGroup({
     id: new FormControl({ value: '', disabled: true }, [Validators.required]),
@@ -45,16 +45,37 @@ export class WorkspacePage implements OnInit {
     dataAtualizacao: new FormControl({ value: '', disabled: true }, [Validators.required])
   });
 
+  filtrosForm = new FormGroup({
+    status: new FormControl<string | null>(null),
+    prioridade: new FormControl<string | null>(null),
+    sort: new FormControl<string | null>(null)
+  });
+
   ngOnInit(): void {
+
+    this.filtrosForm.valueChanges.subscribe(() => {
+      this.paginaAtual = 0;
+      this.incidentsFindAll();
+    });
+
     this.incidentsFindAll();
   }
 
-
   incidentsFindAll(): void {
 
-    this.incidentsService.findAll(this.paginaAtual, this.tamanhoPagina).subscribe({
-      next: (res: any) => {
+    const status = this.filtrosForm.get('status')?.value;
+    const prioridade = this.filtrosForm.get('prioridade')?.value;
+    const sort = this.filtrosForm.get('sort')?.value;
 
+    this.incidentsService.findWithFilters(
+      sort,
+      status,
+      prioridade,
+      this.termoDaBusca,
+      this.paginaAtual,
+      this.tamanhoPagina
+    ).subscribe({
+      next: (res: any) => {
         const data = res.content;
         this.incidentsList.set(data);
 
@@ -73,6 +94,12 @@ export class WorkspacePage implements OnInit {
         console.error('Erro na requisição de incidentes:', err);
       }
     });
+  }
+
+  receberBusca(termo: string) {
+    this.termoDaBusca = termo;
+    this.paginaAtual = 0;
+    this.incidentsFindAll();
   }
 
   buscarNovaPagina(novaPagina: number) {
@@ -213,4 +240,5 @@ export class WorkspacePage implements OnInit {
   goToCommentsPageById(id: string) {
     this.router.navigate(['/comments', id],);
   }
+
 }

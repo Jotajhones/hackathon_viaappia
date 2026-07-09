@@ -20,5 +20,5 @@ export const incidentResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot) 
       router.navigate(['**']); 
       return of(null);
     })
-  );
+  )
 };

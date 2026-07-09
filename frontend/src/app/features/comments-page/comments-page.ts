@@ -9,10 +9,11 @@ import { capitalize } from '../../core/utils/capitalize';
 import { CommentModel } from '../../core/models/comments-model';
 import { CommentsService } from '../../core/services/comments-service';
 import { converterData } from '../../core/utils/tratamento-datas';
+import { FormControl, FormGroup, Validators, ɵInternalFormsSharedModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-comments-page',
-  imports: [SearchbarComponent, NgClass, PageableComponent, DatePipe],
+  imports: [SearchbarComponent, NgClass, PageableComponent, DatePipe, ɵInternalFormsSharedModule, ReactiveFormsModule],
   templateUrl: './comments-page.html',
   styleUrl: './comments-page.css',
 })
@@ -32,6 +33,12 @@ export class CommentsPage {
   incident = signal<any>(null);
   commentsList = signal<CommentModel[]>([]);
   incidetStatus: string = '';
+  dataAtual: Date = new Date()
+
+  comment = new FormGroup({
+    autor: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+    mensagem: new FormControl('', [Validators.required, Validators.maxLength(2000)])
+  });
 
   ngOnInit() {
     const data = this.route.snapshot.data['incidentData'];
@@ -43,11 +50,13 @@ export class CommentsPage {
       if (id) {
         this.paramId = id;
         this.findAllComments(id);
+      } else {
+        this.router.navigate(['**'],);
       }
     });
   }
 
-  findAllComments(id: string) {
+  findAllComments(id: any) {
     this.commentsService.findAllByIncidentsId(id, this.paginaAtual, this.tamanhoPagina).subscribe({
       next: (res: any) => {
 
@@ -72,20 +81,9 @@ export class CommentsPage {
     });
   }
 
-  incidentById() {
-
-    if (!this.paramId) {
-      this.router.navigate(['**'],);
-      return;
-    }
-
-    this.incidentsService.findById(this.paramId).subscribe({
-      next: (res) => { },
-      error: (err) => {
-        this.router.navigate(['**'],);
-        console.error(err);
-      }
-    })
+  buscarNovaPagina(novaPagina: number) {
+    this.paginaAtual = novaPagina;
+    this.findAllComments(this.paramId);
   }
 
   tratamentoString(palavra: string): string {
@@ -94,5 +92,46 @@ export class CommentsPage {
 
   formatarData(data: Date) {
     return converterData(data);
+  }
+
+  createComment() {
+
+    if (!this.paramId) {
+      this.modalService.exibir({
+        tipo: "erro",
+        titulo: "Erro",
+        mensagem: "O id do incidente informado é nulo ou inválido."
+      });
+      return;
+    }
+
+    this.modalService.exibir({
+      tipo: 'loading',
+      titulo: '',
+      mensagem: 'Carregando...'
+    });
+
+    const formsValues = this.comment.getRawValue();
+
+    this.commentsService.createComment(this.paramId, formsValues).subscribe({
+      next: (res) => {
+
+        this.modalService.exibir({
+          tipo: "sucesso",
+          titulo: "Sucesso",
+          mensagem: "Comentário criado com êxito!"
+        });
+
+        this.comment.reset();
+        this.findAllComments(this.paramId);
+      },
+      error: (err) => {
+        this.modalService.exibir({
+          tipo: "erro",
+          titulo: err.error?.type || "Erro ao comentar",
+          mensagem: err.error?.message || "Não foi possível enviar seu comentário."
+        });
+      }
+    });
   }
 }

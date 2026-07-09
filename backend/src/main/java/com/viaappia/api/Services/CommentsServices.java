@@ -25,7 +25,7 @@ public class CommentsServices {
     private final CommentsMapper mapper;
 
     public Page<CommentResponseDTO> findByIncidentId(UUID incidentId, Pageable pageable) {
-        return this.commentsRepository.findByIncidentId(incidentId, pageable).map(mapper::toDTO);
+        return this.commentsRepository.findByIncident_Id(incidentId, pageable).map(mapper::toDTO);
     }
 
     public CommentResponseDTO create(CommentsRequestDTO commentDto, UUID incidentId) {

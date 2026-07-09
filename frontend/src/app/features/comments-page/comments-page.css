@@ -159,7 +159,11 @@
     border: none;
     outline: none;
     border: 2px solid var(--input-bg-color);
-    border-radius: 6px;
+    border-radius: 4px;
+}
+
+input[type=text] {
+    border-radius: 4px 4px 0px 0px;
 }
 
 .form-button-container {
@@ -225,7 +229,7 @@
     text-align: right;
 }
 
-.card-autor{
+.card-autor {
     color: var(--ui-sec);
     font-size: medium;
 }

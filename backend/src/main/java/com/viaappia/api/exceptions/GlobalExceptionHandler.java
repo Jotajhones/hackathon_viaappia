@@ -111,18 +111,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(
-            Exception ex,
-            HttpServletRequest request) {
+//     @ExceptionHandler(Exception.class)
+//     public ResponseEntity<ErrorResponse> handleGenericException(
+//             Exception ex,
+//             HttpServletRequest request) {
 
-        ErrorResponse erro = new ErrorResponse(
-                OffsetDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
-                "Ocorreu um erro interno inesperado no servidor.",
-                request.getRequestURI());
+//         ErrorResponse erro = new ErrorResponse(
+//                 OffsetDateTime.now(),
+//                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                 "Internal Server Error",
+//                 "Ocorreu um erro interno inesperado no servidor.",
+//                 request.getRequestURI());
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
-    }
+//         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+//     }
 }

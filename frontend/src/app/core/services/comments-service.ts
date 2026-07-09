@@ -13,10 +13,17 @@ export class CommentsService {
 
     findAllByIncidentsId(id: string, page: number = 0, size: number = 20): Observable<any> {
 
-        const url = `${this.apiUrl}/${id}/comments`
+        const url = `${this.apiUrl}/${id}/comments`;
         const params = new HttpParams()
             .set('page', page)
             .set('size', size);
         return this.http.get<any>(url, { params });
     }
+
+createComment(id: any, comments: any) {
+
+    const url = `${this.apiUrl}/${id}/comments`;
+    return this.http.post(url, comments);
+}
+
 }

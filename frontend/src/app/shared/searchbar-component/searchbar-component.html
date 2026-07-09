@@ -1,4 +1,13 @@
 <div class="searchbar">
-    <input type="search" placeholder="Pesquisar...">
-    <img src="lupa.png" alt="Ícone de uma lupa">
+    <input 
+      type="search" 
+      [formControl]="campoBusca" 
+      placeholder="Pesquisar..."
+      (keyup.enter)="onSearch()">
+      
+    <img 
+      src="lupa.png" 
+      alt="Ícone de uma lupa"
+      (click)="onSearch()"
+      style="cursor: pointer;">
 </div>

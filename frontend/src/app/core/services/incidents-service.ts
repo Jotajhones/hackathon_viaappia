@@ -37,4 +37,18 @@ export class IncidentsService {
         let url = this.apiUrl + "/" + id;
         return this.http.get(url);
     }
+
+    findWithFilters(sort?: string | null, status?: string | null, prioridade?: string | null, q?: string | null, page: number = 0, size: number = 20): Observable<any> {
+
+        let params = new HttpParams()
+            .set('page', page)
+            .set('size', size);
+
+        if (status) params = params.append('status', status);
+        if (prioridade) params = params.append('prioridade', prioridade);
+        if (q) params = params.append('q', q);
+        if (sort) params = params.append('sort', sort)
+
+        return this.http.get<any>(this.apiUrl, { params });
+    }
 }

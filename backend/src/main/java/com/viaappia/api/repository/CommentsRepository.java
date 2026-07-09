@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.viaappia.api.entity.CommentsEntity;
 
 public interface CommentsRepository extends JpaRepository<CommentsEntity, UUID> {
-    Page <CommentsEntity> findByIncidentId(UUID incidentId, Pageable pageable);
+    Page <CommentsEntity> findByIncident_Id(UUID incidentId, Pageable pageable);
 
 }

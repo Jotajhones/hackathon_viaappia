@@ -22,6 +22,8 @@ export function formatarTempoDecorrido(dataString: Date | string | null): string
     const minutos = Math.floor(segundos / 60);
     const horas = Math.floor(minutos / 60);
     const dias = Math.floor(horas / 24);
+    const meses = Math.floor(dias / 30);
+    const anos = Math.floor(dias / 365);
 
     if (minutos < 1) {
         return 'agora';
@@ -32,5 +34,12 @@ export function formatarTempoDecorrido(dataString: Date | string | null): string
     if (horas < 24) {
         return `${horas}h`;
     }
-    return `${dias} dias`;
+    if (dias < 30) {
+        return `${dias} ${dias === 1 ? 'dia' : 'dias'}`;
+    }
+    if (meses < 12) {
+        return `${meses} ${meses === 1 ? 'mês' : 'meses'}`;
+    }
+    
+    return `${anos} ${anos === 1 ? 'ano' : 'anos'}`;
 }

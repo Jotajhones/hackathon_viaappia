@@ -2,7 +2,6 @@ import { formatDate } from "@angular/common";
 
 
 export function converterData(dataOriginal: Date): string {
-    dataOriginal = new Date();
     const formato = 'yyyy-MM-ddTHH:mm';
     const locale = 'en-US';
     const dataFormatada = formatDate(dataOriginal, formato, locale);

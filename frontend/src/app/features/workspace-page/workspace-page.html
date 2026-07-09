@@ -6,10 +6,7 @@
             <input type="checkbox">
         </div>
 
-        <div class="searchbar">
-            <input type="search" placeholder="Pesquisar...">
-            <img src="lupa.png" alt="Ícone de uma lupa">
-        </div>
+        <app-searchbar-component></app-searchbar-component>
     </div>
 </header>
 
@@ -20,7 +17,7 @@
                 <input type="text" formControlName="id" placeholder="0000">
             </label>
             <label>Abertura
-                <input type="datetime-local" formControlName="dataAbertura" locale="pt-br">
+                <input type="datetime-local" formControlName="dataAbertura">
             </label>
             <label>Última Atualização
                 <input type="datetime-local" formControlName="dataAtualizacao">
@@ -93,7 +90,9 @@
         </div>
         <div class="incidents-list">
             @for(incident of incidentsList(); track incident.id) {
-            <div class="incident-card" (click)="selectIncident(incident)">
+            <div class="incident-card" 
+            (click)="selectIncident(incident)" 
+            (dblclick)="goToCommentsPageById(incident.id)">
                 <div class="card-header">
                     <span class="card-id-status">
                         <span class="cars-status">
@@ -103,10 +102,10 @@
 
                     @if(incident.status !== "CANCELADA" && incident.status !== "RESOLVIDA") {
 
-                        <span class="card-prioridade-line">
-                            <span class="card-prioridade">{{incident.prioridade}}</span>
-                            <div class="card-prioridade-tag" [ngClass]="incident.prioridade"></div>
-                        </span>
+                    <span class="card-prioridade-line">
+                        <span class="card-prioridade">{{incident.prioridade}}</span>
+                        <div class="card-prioridade-tag" [ngClass]="incident.prioridade"></div>
+                    </span>
                     }
                 </div>
 
@@ -116,8 +115,8 @@
 
                 <div class="card-footer">
                     <span>{{incident.responsavel}}</span>
-                    <span>Abertura - {{formatarTempo(incident.dataAbertura)}}</span>
-                    <span>Última Atualização - {{formatarTempo(incident.dataAtualizacao )}}</span>
+                    <span>Abertura há {{formatarTempo(incident.dataAbertura)}}</span>
+                    <span>Última Atualização há {{formatarTempo(incident.dataAtualizacao )}}</span>
                 </div>
             </div>
             }

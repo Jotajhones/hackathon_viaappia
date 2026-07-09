@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { MainLayout } from './layout/main-layout/main-layout';
+import { incidentResolver } from './core/services/incidents-resolver';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -15,6 +16,11 @@ export const routes: Routes = [
             {
                 path: 'workspace',
                 loadComponent: () => import('./features/workspace-page/workspace-page').then(m => m.WorkspacePage)
+            },
+            {
+                path: 'comments/:id',
+                loadComponent: () => import('./features/comments-page/comments-page').then(m => m.CommentsPage),
+                resolve: { incidentData: incidentResolver }
             },
             {
                 path: '**',

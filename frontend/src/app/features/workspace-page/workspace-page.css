@@ -15,24 +15,6 @@
     gap: 20px;
 }
 
-.searchbar {
-    display: flex;
-    max-width: 500px;
-    width: 100%;
-    background-color: var(--input-bg-color);
-    border-radius: 25px;
-    align-items: center;
-    justify-content: center;
-    padding-inline: 20px;
-}
-
-input[type="search"]:focus {
-    width: 100%;
-    border: none;
-    border-bottom: 2px solid var(--ui-sec);
-
-}
-
 .workspace-page {
     max-width: 1600px;
     width: 100%;
@@ -127,7 +109,6 @@ form textarea {
     flex-direction: column;
     gap: 15px;
     height: 100%;
-    overflow-y: auto;
     overflow-x: hidden;
     padding-right: 10px;
     border: 2px solid var(--ui-bg-color);
@@ -138,12 +119,12 @@ form textarea {
 .incidents-container div.incidents-container-head {
     background-color: var(--ui-sec);
     width: calc(100% + 10px);
-    border-radius: 8px 0px 0px 0px;
+    border-radius: 8px 8px 0px 0px;
     color: white;
     padding: 10px;
     position: relative;
     left: -5px;
-
+    margin-bottom: 0px;
 }
 
 .cars-status {
@@ -154,22 +135,16 @@ form textarea {
     text-transform: uppercase;
 }
 
-/* 
-.card-status .ABERTA {
-    background-color: green;
-}
-
-.CANCELADA,
-.EM_ANDAMENTO,
-.RESOLVIDA {
-    background-color: #666;
-} */
-
 
 .incidents-list {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    overflow-y: auto;
+    margin-top: 0px;
+    position: relative;
+    bottom: 10px;
+    height: 100%;
 }
 
 
@@ -182,6 +157,7 @@ form textarea {
     box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     cursor: pointer;
+    margin-right: 5px;
 }
 
 .card-prioridade-line {

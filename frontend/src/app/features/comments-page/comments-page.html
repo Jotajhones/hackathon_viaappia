@@ -1,0 +1,77 @@
+<header class="incident-container">
+    <div class="align-container">
+
+        @if(incident()) {
+
+        <div class="incident-summary">
+            <div class="incident-header-meta">
+                <span class="header-id">#{{incident().id}}</span>
+                <span class="incident-title">{{incident().titulo}}</span>
+
+                @if(incident().status !== "CANCELADA" && incident().status !== "RESOLVIDA") {
+                <div class="prioridade-tag" [ngClass]="incident().prioridade"></div>
+                }
+
+                <span class="header-status">{{tratamentoString(incident().status)}}</span>
+                <span class="header-autor">{{incident().responsavel}}</span>
+            </div>
+            <div class="header-description">
+                <p><span>Descrição: </span>{{incident().descricao}}</p>
+            </div>
+        </div>
+
+        } @else {
+        <div class="loading-summary">Carregando dados do incidente...</div>
+        }
+
+        <div class="search-container">
+            <app-searchbar-component></app-searchbar-component>
+        </div>
+    </div>
+</header>
+
+<div class="comments-page">
+
+    <section class="edit-comments-container">
+        <div class="container-head">
+            <h3>Novo Comentário</h3>
+        </div>
+
+        <form class="comment-form">
+            <div class="form-group">
+                <label for="comment-text">Escreva seu comentário ou nota técnica:</label>
+                <textarea id="comment-text"
+                    placeholder="Digite aqui o histórico ou atualização do incidente..."></textarea>
+            </div>
+
+            <div class="form-button-container">
+                <button type="button" class="button button-commets">Adicionar Comentário</button>
+                <button type="button" class="button button-commets">Limpar</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="incidents-container">
+        <div class="container-head">
+            <h3>Histórico de Comentários</h3>
+            <app-pageable-component></app-pageable-component>
+        </div>
+
+        <div class="incidents-list">
+            @for(comment of commentsList(); track comment.id) {
+
+            <div class="incident-card">
+                <div class="card-header">
+                    <span class="card-autor">{{comment.autor}}</span>
+                    <span class="card-date">{{comment.dataCriacao | date:'d MMM yy - hh:mm'}}</span>
+                </div>
+                <div class="card-desc">{{comment.mensagem}}</div>
+                <div class="card-footer">
+                    <span></span>
+                </div>
+            </div>
+            }
+
+        </div>
+    </section>
+</div>

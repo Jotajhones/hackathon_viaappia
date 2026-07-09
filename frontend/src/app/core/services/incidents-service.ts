@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Incidents } from '../models/incidents-model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -25,12 +24,17 @@ export class IncidentsService {
     }
 
     update(incident: any) {
-        let url = this.apiUrl+"/"+incident.id;
+        let url = this.apiUrl + "/" + incident.id;
         return this.http.put(url, incident);
     }
 
     delete(id: any) {
-        let url = this.apiUrl+"/"+id;
+        let url = this.apiUrl + "/" + id;
         return this.http.delete(url);
+    }
+
+    findById(id: any) {
+        let url = this.apiUrl + "/" + id;
+        return this.http.get(url);
     }
 }

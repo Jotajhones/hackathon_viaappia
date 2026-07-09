@@ -8,10 +8,12 @@ import { converterData, formatarTempoDecorrido } from '../../core/utils/tratamen
 import { capitalize } from '../../core/utils/capitalize';
 import { PageableComponent } from "../../shared/pageable-component/pageable-component";
 import { stringToArray } from '../../core/utils/stringToArray';
+import { SearchbarComponent } from "../../shared/searchbar-component/searchbar-component";
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-workspace-page',
-  imports: [ReactiveFormsModule, NgClass, PageableComponent],
+  imports: [ReactiveFormsModule, NgClass, PageableComponent, SearchbarComponent],
   templateUrl: './workspace-page.html',
   styleUrl: './workspace-page.css',
 })
@@ -19,12 +21,13 @@ export class WorkspacePage implements OnInit {
 
   private incidentsService = inject(IncidentsService);
   private modalService = inject(ModalService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   incidentsList = signal<Incidents[]>([]);
 
   btnController = true;
   incidetStatus: string = '';
-
   paginaAtual: number = 0;
   tamanhoPagina: number = 20;
   totalItens: number = 0;
@@ -37,13 +40,12 @@ export class WorkspacePage implements OnInit {
     prioridade: new FormControl('', [Validators.required]),
     status: new FormControl('', [Validators.required]),
     responsavel: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(255)]),
-    tags: new FormControl('', [Validators.required]),
+    tags: new FormControl(''),
     dataAbertura: new FormControl({ value: '', disabled: true }, [Validators.required]),
     dataAtualizacao: new FormControl({ value: '', disabled: true }, [Validators.required])
   });
 
   ngOnInit(): void {
-
     this.incidentsFindAll();
   }
 
@@ -72,7 +74,6 @@ export class WorkspacePage implements OnInit {
       }
     });
   }
-
 
   buscarNovaPagina(novaPagina: number) {
     this.paginaAtual = novaPagina;
@@ -142,8 +143,13 @@ export class WorkspacePage implements OnInit {
   }
 
   incidentsUpdate(): any {
+    this.modalService.exibir({
+      tipo: 'loading',
+      titulo: '',
+      mensagem: 'Carregando...'
+    });
 
-    const formValues: any =  this.incident.getRawValue() ;
+    const formValues: any = this.incident.getRawValue();
 
     formValues.tags = stringToArray(formValues.tags);
 
@@ -172,6 +178,11 @@ export class WorkspacePage implements OnInit {
   }
 
   incidentDelete(): any {
+    this.modalService.exibir({
+      tipo: 'loading',
+      titulo: '',
+      mensagem: 'Carregando...'
+    });
 
     const formValues = this.incident.getRawValue();
 
@@ -197,5 +208,9 @@ export class WorkspacePage implements OnInit {
         console.error(err);
       }
     })
+  }
+
+  goToCommentsPageById(id: string) {
+    this.router.navigate(['/comments', id],);
   }
 }

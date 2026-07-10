@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.viaappia.api.Services.CommentsServices;
@@ -26,8 +27,9 @@ public class CommentsController {
     private final CommentsServices commentsServices;
 
     @GetMapping("/{incidentId}/comments")
-    public Page<CommentResponseDTO> findByIncidentId(@PathVariable UUID incidentId, Pageable pageable) {
-        return this.commentsServices.findByIncidentId(incidentId, pageable);
+    public Page<CommentResponseDTO> findByIncident_Id(@PathVariable UUID incidentId,   @RequestParam(required = false) String q,Pageable pageable) {
+      
+        return this.commentsServices.findByIncident_Id(incidentId, q,pageable);
     }
 
     @PostMapping("/{incidentId}/comments")

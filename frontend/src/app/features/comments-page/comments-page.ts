@@ -19,7 +19,6 @@ import { FormControl, FormGroup, Validators, ɵInternalFormsSharedModule, Reacti
 })
 export class CommentsPage {
 
-  private incidentsService = inject(IncidentsService);
   private modalService = inject(ModalService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -27,17 +26,22 @@ export class CommentsPage {
 
   paramId: string | null = '';
   paginaAtual: number = 0;
-  tamanhoPagina: number = 20;
+  tamanhoPagina: number = 10;
   totalItens: number = 0;
   totalPaginas: number = 0;
   incident = signal<any>(null);
   commentsList = signal<CommentModel[]>([]);
   incidetStatus: string = '';
-  dataAtual: Date = new Date()
+  dataAtual: Date = new Date();
+  termoDaBusca: string | null = null;
 
   comment = new FormGroup({
     autor: new FormControl('', [Validators.required, Validators.maxLength(255)]),
     mensagem: new FormControl('', [Validators.required, Validators.maxLength(2000)])
+  });
+
+  filtrosForm = new FormGroup({
+    sort: new FormControl<string | null>(null)
   });
 
   ngOnInit() {
@@ -49,36 +53,57 @@ export class CommentsPage {
 
       if (id) {
         this.paramId = id;
-        this.findAllComments(id);
+        
+        this.findAllComments(this.paramId);
+
+        this.filtrosForm.valueChanges.subscribe(() => {
+          this.paginaAtual = 0;
+          this.findAllComments(this.paramId);
+        });
+        
       } else {
-        this.router.navigate(['**'],);
+        this.router.navigate(['**']);
       }
     });
   }
 
   findAllComments(id: any) {
-    this.commentsService.findAllByIncidentsId(id, this.paginaAtual, this.tamanhoPagina).subscribe({
-      next: (res: any) => {
 
-        const data = res.content;
-        this.commentsList.set(data);
+    const sort = this.filtrosForm.get('sort')?.value;
 
-        if (res.page) {
-          this.paginaAtual = res.page.number;
-          this.totalItens = res.page.totalElements;
-          this.totalPaginas = res.page.totalPages;
+    this.commentsService.findAllByIncidentsId(
+      id,
+      sort,
+      this.termoDaBusca,
+      this.paginaAtual,
+      this.tamanhoPagina).subscribe({
+        next: (res: any) => {
+
+          const data = res.content;
+          this.commentsList.set(data);
+
+          if (res.page) {
+            this.paginaAtual = res.page.number;
+            this.totalItens = res.page.totalElements;
+            this.totalPaginas = res.page.totalPages;
+          }
+        },
+        error: (err) => {
+          this.modalService.exibir({
+            tipo: "erro",
+            titulo: err.error?.type || "Erro",
+            mensagem: err.error?.message || "Ocorreu um erro inesperado."
+
+          });
+          console.error('Erro na requisição de comentarios:', err);
         }
-      },
-      error: (err) => {
-        this.modalService.exibir({
-          tipo: "erro",
-          titulo: err.error?.type || "Erro",
-          mensagem: err.error?.message || "Ocorreu um erro inesperado."
+      });
+  }
 
-        });
-        console.error('Erro na requisição de comentarios:', err);
-      }
-    });
+  receberBusca(termo: string) {
+    this.termoDaBusca = termo;
+    this.paginaAtual = 0;
+    this.findAllComments(this.paramId);
   }
 
   buscarNovaPagina(novaPagina: number) {

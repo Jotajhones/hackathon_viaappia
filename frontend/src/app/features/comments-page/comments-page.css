@@ -1,7 +1,7 @@
 .comments-page {
     max-width: 1600px;
     width: 100%;
-    height: calc(100vh - 130px);
+    height: calc(100vh - 170px);
     padding: 20px;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -11,7 +11,7 @@
 
 .incident-container {
     background-color: var(--ui-bg-color);
-    padding: 15px;
+    padding: 5px 15px;
     box-shadow: 3px 0px 3px 3px rgba(0, 0, 0, 0.2);
 }
 
@@ -23,18 +23,25 @@
 }
 
 .incident-summary {
-    display: flex;
+    display: grid;
     flex-direction: column;
     gap: 8px;
     min-width: 300px;
-    max-width: 90%;
+    width: 100%;
+    max-width: 1020px;
 }
 
 .incident-header-meta {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr;
+}
+
+.meta-conteiner {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+    flex-direction: column-reverse;
+    gap: 10px;
+    align-items: flex-start;
+    justify-content: start;
 }
 
 .incident-title {
@@ -104,6 +111,21 @@
     background-color: rgb(45, 78, 167);
 }
 
+input[type="select"],
+#dateSelect {
+    width: 100%;
+    padding: 5px 10px;
+    border: none;
+    outline: none;
+    border: 2px solid var(--input-bg-color);
+    border-radius: 4px;
+}
+
+.ordenacao-grupo label {
+    color: var(--ui-sec);
+    font-weight: bold;
+}
+
 .search-container {
     position: absolute;
     right: 0px;
@@ -151,10 +173,10 @@
     font-weight: 500;
     color: #333333;
 }
-
+ 
 .comment-form textarea {
     width: 100%;
-    min-height: 250px;
+    min-height: 200px;
     padding: 5px 10px;
     border: none;
     outline: none;

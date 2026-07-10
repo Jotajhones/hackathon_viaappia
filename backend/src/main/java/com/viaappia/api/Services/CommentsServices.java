@@ -24,17 +24,18 @@ public class CommentsServices {
     private final IncidentsRepository incidentsRepository;
     private final CommentsMapper mapper;
 
-    public Page<CommentResponseDTO> findByIncidentId(UUID incidentId, Pageable pageable) {
-        return this.commentsRepository.findByIncident_Id(incidentId, pageable).map(mapper::toDTO);
+    public Page<CommentResponseDTO> findByIncident_Id(UUID incidentId, String q, Pageable pageable) {
+        String termoBusca = (q != null && !q.isBlank()) ? "%" + q.toLowerCase() + "%" : null;
+        return this.commentsRepository.findByIncident_Id(incidentId, termoBusca, pageable).map(mapper::toDTO);
     }
 
     public CommentResponseDTO create(CommentsRequestDTO commentDto, UUID incidentId) {
         IncidentsEntity incident = incidentsRepository.findById(incidentId)
                 .orElseThrow(() -> new RuntimeException("Incidente não encontrado"));
-        
+
         CommentsEntity comment = mapper.toEntity(commentDto);
         comment.setIncident(incident);
-        
+
         CommentsEntity savedComment = this.commentsRepository.save(comment);
         return mapper.toDTO(savedComment);
     }

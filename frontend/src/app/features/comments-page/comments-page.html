@@ -5,17 +5,32 @@
 
         <div class="incident-summary">
             <div class="incident-header-meta">
-                <span class="header-id">#{{incident().id}}</span>
-                <span class="incident-title">{{incident().titulo}}</span>
+                <div class="meta-conteiner">
+                    <span class="header-id">#{{incident().id}}</span>
+                    <span class="incident-title">{{incident().titulo}}</span>
+                </div>
 
-                @if(incident().status !== "CANCELADA" && incident().status !== "RESOLVIDA") {
-                <div 
-                class="prioridade-tag" 
-                [ngClass]="incident().prioridade"></div>
-                }
+                <div class="meta-conteiner">
+                    @if(incident().status !== "CANCELADA" && incident().status !== "RESOLVIDA") {
+                    <div
+                    class="prioridade-tag"
+                    [ngClass]="incident().prioridade"></div>
+                    }
+                    <span class="header-status">{{tratamentoString(incident().status)}}</span>
+                    <span class="header-autor">{{incident().responsavel}}</span>
+                </div>
 
-                <span class="header-status">{{tratamentoString(incident().status)}}</span>
-                <span class="header-autor">{{incident().responsavel}}</span>
+                <form [formGroup]="filtrosForm" class="ordenacao-grupo">
+                    <label for="dateSelect">Ordenar:</label>
+                    <select id="dateSelect" formControlName="sort">
+                        <option [ngValue]="null">Limpar filtro</option>
+                        
+                        <optgroup label="Data de Criação">
+                            <option value="dataCriacao,asc">Mais antigas</option>
+                            <option value="dataCriacao,desc">Mais recente</option>
+                        </optgroup>                     
+                    </select>
+                </form>
             </div>
             <div class="header-description">
                 <p><span>Descrição: </span>{{incident().descricao}}</p>
@@ -27,7 +42,9 @@
         }
 
         <div class="search-container">
-            <app-searchbar-component></app-searchbar-component>
+            <app-searchbar-component
+            (termoBuscado)="receberBusca($event)">               
+            </app-searchbar-component>
         </div>
     </div>
 </header>

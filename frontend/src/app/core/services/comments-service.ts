@@ -11,12 +11,16 @@ export class CommentsService {
     private http = inject(HttpClient);
     private apiUrl = environment.API_URL;
 
-    findAllByIncidentsId(id: string, page: number = 0, size: number = 20): Observable<any> {
+    findAllByIncidentsId( id: string, sort?: string | null, q?: string | null, page: number = 0, size: number = 20): Observable<any> {
 
-        const url = `${this.apiUrl}/${id}/comments`;
-        const params = new HttpParams()
+        let url = `${this.apiUrl}/${id}/comments`;
+        let params = new HttpParams()
             .set('page', page)
             .set('size', size);
+
+        if (q) params = params.append('q', q);
+        if (sort) params = params.append('sort', sort);
+
         return this.http.get<any>(url, { params });
     }
 

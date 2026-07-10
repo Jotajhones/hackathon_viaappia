@@ -12,7 +12,7 @@ h1 {
     z-index: 0;
     font-size: 3.5rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--ui-bg-color);
     letter-spacing: -1px;
     text-transform: uppercase;
     text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -36,7 +36,7 @@ h1 {
 }
 
 .login-container {
-    background-color: #fff;
+    color: var(--ui-bg-color);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -72,9 +72,6 @@ label {
         left: 15%;
     }
     
-    /* .login-container {
-        right: 15%;
-    } */
 }
 
 @media (min-width: 1801px) {

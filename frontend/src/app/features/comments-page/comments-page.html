@@ -16,7 +16,7 @@
                     class="prioridade-tag"
                     [ngClass]="incident().prioridade"></div>
                     }
-                    <span class="header-status">{{tratamentoString(incident().status)}}</span>
+                    <span class="header-status">{{beautyString(incident().status)}}</span>
                     <span class="header-autor">{{incident().responsavel}}</span>
                 </div>
 
@@ -43,7 +43,7 @@
 
         <div class="search-container">
             <app-searchbar-component
-            (termoBuscado)="receberBusca($event)">               
+            (termoBuscado)="searchReceiver($event)">               
             </app-searchbar-component>
         </div>
     </div>
@@ -93,7 +93,7 @@
             [paginaAtual]="paginaAtual" 
             [totalPaginas]="totalPaginas" 
             [totalItens]="totalItens"
-            (mudarPagina)="buscarNovaPagina($event)"></app-pageable-component>
+            (mudarPagina)="getNewPage($event)"></app-pageable-component>
         </div>
 
         <div class="incidents-list">

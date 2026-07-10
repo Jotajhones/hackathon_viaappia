@@ -1,15 +1,16 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe, NgClass } from '@angular/common';
+import { Router } from '@angular/router';
 import { Incidents } from '../../core/models/incidents-model';
 import { IncidentsService } from '../../core/services/incidents-service';
 import { ModalService } from '../../core/services/modal-service';
-import { converterData, formatarTempoDecorrido } from '../../core/utils/tratamento-datas';
+import { StatsService } from '../../core/services/stats-service';
+import { getAwaistTime, dateConverter } from '../../core/utils/tratamento-datas';
 import { capitalize } from '../../core/utils/capitalize';
-import { PageableComponent } from "../../shared/pageable-component/pageable-component";
 import { stringToArray } from '../../core/utils/stringToArray';
+import { PageableComponent } from "../../shared/pageable-component/pageable-component";
 import { SearchbarComponent } from "../../shared/searchbar-component/searchbar-component";
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-workspace-page',
@@ -22,8 +23,10 @@ export class WorkspacePage implements OnInit {
   private incidentsService = inject(IncidentsService);
   private modalService = inject(ModalService);
   private router = inject(Router);
+  private statsService = inject(StatsService);
 
   incidentsList = signal<Incidents[]>([]);
+
   termoDaBusca: string | null = null;
   btnController = true;
   incidetStatus: string = '';
@@ -32,6 +35,7 @@ export class WorkspacePage implements OnInit {
   totalItens: number = 0;
   totalPaginas: number = 0;
   dataAtual = new Date();
+  stats: any;
 
   incident = new FormGroup({
     id: new FormControl({ value: '', disabled: true }, [Validators.required]),
@@ -52,17 +56,17 @@ export class WorkspacePage implements OnInit {
   });
 
   ngOnInit(): void {
-
     this.filtrosForm.valueChanges.subscribe(() => {
       this.paginaAtual = 0;
       this.incidentsFindAll();
+      this.findStats();
     });
 
     this.incidentsFindAll();
+    this.findStats();
   }
 
   incidentsFindAll(): void {
-
     const status = this.filtrosForm.get('status')?.value;
     const prioridade = this.filtrosForm.get('prioridade')?.value;
     const sort = this.filtrosForm.get('sort')?.value;
@@ -96,63 +100,10 @@ export class WorkspacePage implements OnInit {
     });
   }
 
-  receberBusca(termo: string) {
-    this.termoDaBusca = termo;
-    this.paginaAtual = 0;
-    this.incidentsFindAll();
-  }
-
-  buscarNovaPagina(novaPagina: number) {
-    this.paginaAtual = novaPagina;
-    this.incidentsFindAll();
-  }
-
-  formatarTempo(data: Date): any {
-    return formatarTempoDecorrido(data);
-  }
-
-  selectIncident(selectedIncident: any) {
-    const formValues = { ...selectedIncident };
-
-    if (selectedIncident.tags && Array.isArray(selectedIncident.tags)) {
-      formValues.tags = selectedIncident.tags.join(', ');
-    }
-
-    formValues.dataAbertura = converterData(formValues.dataAbertura);
-    formValues.dataAtualizacao = converterData(formValues.dataAtualizacao);
-
-    this.incident.patchValue(formValues);
-    this.btnController = false;
-  }
-
-  resetForm(): void {
-    this.incident.reset();
-    this.btnController = true;
-  }
-
-  incidentsCreate() {
-    this.modalService.exibir({
-      tipo: 'loading',
-      titulo: '',
-      mensagem: 'Carregando...'
-    });
-
-    const formValues: any = { ...this.incident.value };
-
-    formValues.tags = stringToArray(formValues.tags);
-
-    this.incidentsService.create(formValues).subscribe({
+  findStats() {
+    this.statsService.findStats().subscribe({
       next: (res) => {
-        this.modalService.exibir({
-          tipo: "sucesso",
-          titulo: "Sucesso",
-          mensagem: "Incidente criado com êxito!"
-        });
-
-        this.resetForm();
-
-        this.paginaAtual = 0;
-        this.incidentsFindAll();
+        this.stats = res;
       },
       error: (err) => {
         this.modalService.exibir({
@@ -165,8 +116,38 @@ export class WorkspacePage implements OnInit {
     });
   }
 
-  tratamentoString(palavra: string): string {
-    return capitalize(palavra);
+  incidentsCreate() {
+    this.modalService.exibir({
+      tipo: 'loading',
+      titulo: '',
+      mensagem: 'Carregando...'
+    });
+
+    const formValues: any = { ...this.incident.value };
+    formValues.tags = stringToArray(formValues.tags);
+
+    this.incidentsService.create(formValues).subscribe({
+      next: (res) => {
+        this.modalService.exibir({
+          tipo: "sucesso",
+          titulo: "Sucesso",
+          mensagem: "Incidente criado com êxito!"
+        });
+
+        this.resetForm();
+        this.paginaAtual = 0;
+        this.incidentsFindAll();
+        this.findStats();
+      },
+      error: (err) => {
+        this.modalService.exibir({
+          tipo: "erro",
+          titulo: err.error?.type || "Erro",
+          mensagem: err.error?.message || "Ocorreu um erro inesperado."
+        });
+        console.error(err);
+      }
+    });
   }
 
   incidentsUpdate(): any {
@@ -177,7 +158,6 @@ export class WorkspacePage implements OnInit {
     });
 
     const formValues: any = this.incident.getRawValue();
-
     formValues.tags = stringToArray(formValues.tags);
 
     this.incidentsService.update(formValues).subscribe({
@@ -189,9 +169,9 @@ export class WorkspacePage implements OnInit {
         });
 
         this.resetForm();
-
         this.paginaAtual = 0;
         this.incidentsFindAll();
+        this.findStats();
       },
       error: (err) => {
         this.modalService.exibir({
@@ -222,9 +202,9 @@ export class WorkspacePage implements OnInit {
         });
 
         this.resetForm();
-
         this.paginaAtual = 0;
         this.incidentsFindAll();
+        this.findStats();
       },
       error: (err) => {
         this.modalService.exibir({
@@ -237,8 +217,45 @@ export class WorkspacePage implements OnInit {
     })
   }
 
-  goToCommentsPageById(id: string) {
-    this.router.navigate(['/comments', id],);
+  selectIncident(selectedIncident: any) {
+    const formValues = { ...selectedIncident };
+
+    if (selectedIncident.tags && Array.isArray(selectedIncident.tags)) {
+      formValues.tags = selectedIncident.tags.join(', ');
+    }
+
+    formValues.dataAbertura = dateConverter(formValues.dataAbertura);
+    formValues.dataAtualizacao = dateConverter(formValues.dataAtualizacao);
+
+    this.incident.patchValue(formValues);
+    this.btnController = false;
   }
 
+  resetForm(): void {
+    this.incident.reset();
+    this.btnController = true;
+  }
+
+  searchReceiver(termo: string) {
+    this.termoDaBusca = termo;
+    this.paginaAtual = 0;
+    this.incidentsFindAll();
+  }
+
+  getNewPage(novaPagina: number) {
+    this.paginaAtual = novaPagina;
+    this.incidentsFindAll();
+  }
+
+  beautyTime(data: Date): any {
+    return getAwaistTime(data);
+  }
+
+  beautyString(palavra: string): string {
+    return capitalize(palavra);
+  }
+
+  goToCommentsPageById(id: string) {
+    this.router.navigate(['/comments', id]);
+  }
 }

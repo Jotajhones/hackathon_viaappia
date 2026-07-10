@@ -1,14 +1,14 @@
 import { formatDate } from "@angular/common";
 
 
-export function converterData(dataOriginal: Date): string {
+export function dateConverter(dataOriginal: Date): string {
     const formato = 'yyyy-MM-ddTHH:mm';
     const locale = 'en-US';
     const dataFormatada = formatDate(dataOriginal, formato, locale);
     return (dataFormatada);
 }
 
-export function formatarTempoDecorrido(dataString: Date | string | null): string {
+export function getAwaistTime(dataString: Date | string | null): string {
     if (!dataString) return '';
 
     const dataPassada = new Date(dataString).getTime();

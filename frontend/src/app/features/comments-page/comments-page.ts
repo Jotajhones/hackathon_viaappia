@@ -1,19 +1,25 @@
 import { Component, inject, signal } from '@angular/core';
+import { DatePipe, NgClass } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IncidentsService } from '../../core/services/incidents-service';
-import { ModalService } from '../../core/services/modal-service';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule, ɵInternalFormsSharedModule } from '@angular/forms';
 import { SearchbarComponent } from "../../shared/searchbar-component/searchbar-component";
 import { PageableComponent } from "../../shared/pageable-component/pageable-component";
-import { DatePipe, NgClass } from '@angular/common';
-import { capitalize } from '../../core/utils/capitalize';
-import { CommentModel } from '../../core/models/comments-model';
+import { ModalService } from '../../core/services/modal-service';
 import { CommentsService } from '../../core/services/comments-service';
-import { converterData } from '../../core/utils/tratamento-datas';
-import { FormControl, FormGroup, Validators, ɵInternalFormsSharedModule, ReactiveFormsModule } from '@angular/forms';
+import { CommentModel } from '../../core/models/comments-model';
+import { capitalize } from '../../core/utils/capitalize';
+
 
 @Component({
   selector: 'app-comments-page',
-  imports: [SearchbarComponent, NgClass, PageableComponent, DatePipe, ɵInternalFormsSharedModule, ReactiveFormsModule],
+  imports: [
+    SearchbarComponent, 
+    NgClass, 
+    PageableComponent, 
+    DatePipe, 
+    ɵInternalFormsSharedModule, 
+    ReactiveFormsModule
+  ],
   templateUrl: './comments-page.html',
   styleUrl: './comments-page.css',
 })
@@ -24,16 +30,19 @@ export class CommentsPage {
   private router = inject(Router);
   private commentsService = inject(CommentsService);
 
+  incident = signal<any>(null);
+  commentsList = signal<CommentModel[]>([]);
+
   paramId: string | null = '';
+  termoDaBusca: string | null = null;
   paginaAtual: number = 0;
   tamanhoPagina: number = 10;
   totalItens: number = 0;
   totalPaginas: number = 0;
-  incident = signal<any>(null);
-  commentsList = signal<CommentModel[]>([]);
+
   incidetStatus: string = '';
   dataAtual: Date = new Date();
-  termoDaBusca: string | null = null;
+
 
   comment = new FormGroup({
     autor: new FormControl('', [Validators.required, Validators.maxLength(255)]),
@@ -43,6 +52,7 @@ export class CommentsPage {
   filtrosForm = new FormGroup({
     sort: new FormControl<string | null>(null)
   });
+
 
   ngOnInit() {
     const data = this.route.snapshot.data['incidentData'];
@@ -68,7 +78,6 @@ export class CommentsPage {
   }
 
   findAllComments(id: any) {
-
     const sort = this.filtrosForm.get('sort')?.value;
 
     this.commentsService.findAllByIncidentsId(
@@ -76,51 +85,30 @@ export class CommentsPage {
       sort,
       this.termoDaBusca,
       this.paginaAtual,
-      this.tamanhoPagina).subscribe({
-        next: (res: any) => {
+      this.tamanhoPagina
+    ).subscribe({
+      next: (res: any) => {
+        const data = res.content;
+        this.commentsList.set(data);
 
-          const data = res.content;
-          this.commentsList.set(data);
-
-          if (res.page) {
-            this.paginaAtual = res.page.number;
-            this.totalItens = res.page.totalElements;
-            this.totalPaginas = res.page.totalPages;
-          }
-        },
-        error: (err) => {
-          this.modalService.exibir({
-            tipo: "erro",
-            titulo: err.error?.type || "Erro",
-            mensagem: err.error?.message || "Ocorreu um erro inesperado."
-
-          });
-          console.error('Erro na requisição de comentarios:', err);
+        if (res.page) {
+          this.paginaAtual = res.page.number;
+          this.totalItens = res.page.totalElements;
+          this.totalPaginas = res.page.totalPages;
         }
-      });
-  }
-
-  receberBusca(termo: string) {
-    this.termoDaBusca = termo;
-    this.paginaAtual = 0;
-    this.findAllComments(this.paramId);
-  }
-
-  buscarNovaPagina(novaPagina: number) {
-    this.paginaAtual = novaPagina;
-    this.findAllComments(this.paramId);
-  }
-
-  tratamentoString(palavra: string): string {
-    return capitalize(palavra);
-  }
-
-  formatarData(data: Date) {
-    return converterData(data);
+      },
+      error: (err) => {
+        this.modalService.exibir({
+          tipo: "erro",
+          titulo: err.error?.type || "Erro",
+          mensagem: err.error?.message || "Ocorreu um erro inesperado."
+        });
+        console.error('Erro na requisição de comentarios:', err);
+      }
+    });
   }
 
   createComment() {
-
     if (!this.paramId) {
       this.modalService.exibir({
         tipo: "erro",
@@ -140,7 +128,6 @@ export class CommentsPage {
 
     this.commentsService.createComment(this.paramId, formsValues).subscribe({
       next: (res) => {
-
         this.modalService.exibir({
           tipo: "sucesso",
           titulo: "Sucesso",
@@ -159,4 +146,20 @@ export class CommentsPage {
       }
     });
   }
+
+  searchReceiver(termo: string) {
+    this.termoDaBusca = termo;
+    this.paginaAtual = 0;
+    this.findAllComments(this.paramId);
+  }
+
+  getNewPage(novaPagina: number) {
+    this.paginaAtual = novaPagina;
+    this.findAllComments(this.paramId);
+  }
+
+  beautyString(palavra: string): string {
+    return capitalize(palavra);
+  }
+
 }

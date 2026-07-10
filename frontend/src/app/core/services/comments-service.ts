@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 export class CommentsService {
 
     private http = inject(HttpClient);
-    private apiUrl = environment.API_URL;
+    private apiUrl = `${environment.API_BASE_URL}/incidents`;
 
     findAllByIncidentsId( id: string, sort?: string | null, q?: string | null, page: number = 0, size: number = 20): Observable<any> {
 

@@ -11,7 +11,7 @@ import { PageableResponse } from '../models/pageable-model';
 export class PageableService {
 
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.API_URL}`;
+  private readonly apiUrl = `${environment.API_BASE_URL}`;
 
   listarDados(page: number, size: number): Observable<PageableResponse<any>> {
     const params = new HttpParams().set('page', page).set('size', size);

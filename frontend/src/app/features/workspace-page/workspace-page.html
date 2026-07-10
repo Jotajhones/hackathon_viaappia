@@ -1,3 +1,26 @@
+<div class="stats-container">
+    @if (stats) {
+        <div class="stat-item total">Ocorrências: <strong>{{ stats.ocorrencias }}</strong></div>
+        
+        <div class="stat-group">
+            <span class="group-title">Status:</span>
+            <span class="badge aberta">Aberta: {{ stats.status.ABERTA }}</span>
+            <span class="badge andamento">Andamento: {{ stats.status.EM_ANDAMENTO }}</span>
+            <span class="badge cancelada">Cancelada: {{ stats.status.CANCELADA }}</span>
+            <span class="badge resolvida">Resolvida: {{ stats.status.RESOLVIDA }}</span>
+        </div>
+
+        <div class="stat-group">
+            <span class="group-title">Prioridade:</span>
+            <span class="badge ALTA">Alta: {{ stats.prioridade.ALTA }}</span>
+            <span class="badge MEDIA">Média: {{ stats.prioridade.MEDIA }}</span>
+            <span class="badge BAIXA">Baixa: {{ stats.prioridade.BAIXA }}</span>
+        </div>
+    } @else {
+        <span class="group-title">Carregando...</span>
+    }
+</div>
+
 <header class="filter-container">
     <div class="align-container">
         
@@ -43,7 +66,7 @@
         </form>
 
         <app-searchbar-component 
-        (termoBuscado)="receberBusca($event)">
+        (termoBuscado)="searchReceiver($event)">
         </app-searchbar-component>
         
     </div>
@@ -161,24 +184,26 @@
         </div>
     </form>
 
-    <div class="incidents-container">
+    <section class="incidents-container">
         <div class="incidents-container-head">
             <h3>Tickets Recentes</h3>
 
             <app-pageable-component [paginaAtual]="paginaAtual" [totalPaginas]="totalPaginas" [totalItens]="totalItens"
-                (mudarPagina)="buscarNovaPagina($event)">
+                (mudarPagina)="getNewPage($event)">
             </app-pageable-component>
 
         </div>
         <div class="incidents-list">
+
             @for(incident of incidentsList(); track incident.id) {
+
             <div class="incident-card" 
             (click)="selectIncident(incident)" 
             (dblclick)="goToCommentsPageById(incident.id)">
                 <div class="card-header">
                     <span class="card-id-status">
                         <span class="cars-status">
-                            {{tratamentoString(incident.status)}}</span>
+                            {{beautyString(incident.status)}}</span>
                         <span class="card-id">#{{incident.id}}</span>
                     </span>
 
@@ -197,11 +222,13 @@
 
                 <div class="card-footer">
                     <span>{{incident.responsavel}}</span>
-                    <span>Abertura há {{formatarTempo(incident.dataAbertura)}}</span>
-                    <span>Última Atualização há {{formatarTempo(incident.dataAtualizacao )}}</span>
+                    <span>Abertura há {{beautyTime(incident.dataAbertura)}}</span>
+                    <span>Última Atualização há {{beautyTime(incident.dataAtualizacao )}}</span>
                 </div>
             </div>
+
             } @empty {
+
             <div class="incident-card">
                 <div class="card-header">
                     <span class="card-id-status">
@@ -220,8 +247,10 @@
                     <span>Última atualização - {{dataAtual | date:'d MMM yy - HH:mm'}}</span>
                 </div>
             </div>
+
             }
+            
         </div>
 
-    </div>
+    </section>
 </div>

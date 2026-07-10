@@ -1,15 +1,70 @@
 :root {
+
+    /* Backgrounds */
     --body-bg-color: #e4edf3;
-    --input-bg-color: #c7ddee;;
-
+    --input-bg-color: #c7ddee;
     --ui-bg-color: #ffffff;
+    --bg-light: #e9ecef;
+    --bg-lighter: #f1f3f5;
+    --card-bg-light: #f8f9fa;
 
-    --font-sec-color: #FAF9FD;
-
+    /* Cores de interface */
     --ui-sec: #005ccb;
     --ui-sec-hover: rgb(24, 117, 231);
     --ui-sec-focus: #6990be;
     --ui-sec-focus-2: #c7ddee;
+    --ui-sec-bright: #007bff;
+
+    /* fonts  */
+    --text-white: #ffffff; 
+    --font-sec-color: #FAF9FD;
+    --text-darker: #333333;
+    --text-dark: #444444;
+    --text-dark-muted: #495057;
+    --text-primary: #555555;
+    --text-muted: #666666;
+    --text-muted-light: #777777;
+    --text-gray-dark: #6c757d;
+    --text-gray-light: #868e96;
+    --text-secondary: #888888;
+    --text-nf-darker: #1e293b;
+    --text-nf-lighter: #475569;
+
+    /* Ocorrencias PRIORIDADE */
+    --priority-high: red;
+    --priority-medium: orange;
+    --priority-low: #198754;
+
+    /* Ocorrencias Status */
+    --status-open: #343a40;
+    --status-progress: #000000;
+    --status-resolved: rgb(45, 78, 167);
+    --status-canceled: #6c757d;
+
+    /* Erros inputs */
+    --danger-color: rgb(212, 16, 16);
+    --danger-hover: rgb(173, 11, 11);
+    --error-text: #d32f2f;
+    --error-bg: rgb(219, 191, 191);
+    --shadow-color: rgba(0, 0, 0, 0.2);
+
+    /* Modal */
+    --success-color: #2e7d32;
+    --warning-color: #ed6c02;
+    --error-color: #d32f2f; 
+    --overlay-bg: rgba(0, 0, 0, 0.6); 
+    --modal-shadow: rgba(0, 0, 0, 0.4); 
+    --border-light: rgba(0, 0, 0, 0.1);
+    
+    /* Paginador */
+    --text-neutral: #4a4a4a;
+    --bg-off-white: #fcfcfc;
+    --bg-hover-light: #f0f0f0;
+    --bg-disabled-light: #f9f9f9;
+    --border-gray-light: #e0e0e0;
+    --border-gray: #ccc;
+    --border-gray-dark: #bbb;
+    --border-disabled-light: #e6e6e6;
 }
 
 * {
@@ -23,6 +78,7 @@ body {
     background-color: var(--body-bg-color);
 }
 
+/* Estilos Globais */
 .button {
     height: 40px;
     color: var(--font-sec-color);
@@ -47,13 +103,15 @@ body {
     outline-offset: 2px;
 }
 
-.button:disabled {
+.button:disabled,
+button.invalid {
     filter: grayscale(90%);
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
 }
 
+/* Inputs */
 input[type="text"],
 input[type="password"],
 input[type="search"],
@@ -76,11 +134,106 @@ input[type="email"]:focus {
     background-color: var(--ui-sec-focus-2);
 }
 
+form select,
+form textarea,
+input[type="select"],
+#dateSelect,
+.comment-form textarea {
+    width: 100%;
+    padding: 5px 10px;
+    border: none;
+    outline: none;
+    border: 2px solid var(--input-bg-color);
+    border-radius: 4px;
+}
+
 .input-error {
-    border-color: red !important;
-    background-color: rgb(219, 191, 191) !important;
+    border-color: var(--danger-color) !important;
+    background-color: var(--error-bg) !important;
 }
 
 label:has(.input-error) {
-    color: #d32f2f !important;
+    color: var(--error-text) !important;
+}
+
+/* Layout principal das telas */
+.workspace-page,
+.comments-page {
+    max-width: 1600px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: auto;
+}
+
+/* Cabeçalho de containers (Aba azul) */
+.incidents-container-head,
+.container-head {
+    background-color: var(--ui-sec);
+    width: calc(100% + 10px);
+    color: white;
+    padding: 10px;
+    position: relative;
+    left: -5px;
+}
+
+.incidents-container-head {
+    border-radius: 8px 8px 0px 0px;
+    margin-bottom: 0px;
+}
+
+.container-head {
+    border-radius: 8px 0px 0px 0px;
+}
+
+.container-head h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Estrutura das Listas  */
+.incidents-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+    overflow-x: hidden;
+    padding-right: 10px;
+    border: 2px solid var(--ui-bg-color);
+    padding-inline: 5px;
+    border-radius: 8px;
+}
+
+.incidents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    margin-top: 0px;
+    position: relative;
+    bottom: 10px;
+    height: 100%;
+}
+
+/* Tags de Prioridade Globais */
+.card-prioridade-tag,
+.prioridade-tag {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: block;
+}
+
+.ALTA {
+    background-color: var(--priority-high);
+}
+
+.MEDIA {
+    background-color: var(--priority-medium);
+}
+
+.BAIXA {
+    background-color: var(--priority-low);
 }

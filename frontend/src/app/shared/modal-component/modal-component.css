@@ -1,22 +1,24 @@
+/* Fundo do modal */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
 }
 
+/* Container */
 .modal-content {
   background-color: var(--ui-bg-color);
   max-width: 400px;
   width: 90%;
   border-radius: 8px;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 4px 15px var(--modal-shadow);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -24,7 +26,7 @@
 
 .modal-header {
   padding: 15px 20px;
-  color: white;
+  color: var(--text-white);
 }
 
 .modal-header h2 {
@@ -34,21 +36,21 @@
 }
 
 .modal-header.sucesso {
-  background-color: #2e7d32;
+  background-color: var(--success-color);
 }
 
 .modal-header.erro {
-  background-color: #d32f2f;
+  background-color: var(--error-color);
 }
 
 .modal-header.aviso {
-  background-color: #ed6c02;
+  background-color: var(--warning-color);
 }
 
 .modal-body {
   padding: 20px;
   font-size: 15px;
-  color: #444;
+  color: var(--text-dark); 
   line-height: 1.5;
 }
 
@@ -57,7 +59,7 @@
   display: flex;
   justify-content: flex-end;
   background-color: var(--ui-bg-color);
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid var(--border-light);
 }
 
 .modal-button {
@@ -70,9 +72,10 @@
     border: none;
 }
 
+/* loading */
 .loading-text {
     text-align: center;
-    color: white;
+    color: var(--text-white);
     font-size: 24px;
     font-weight: bold;
 }

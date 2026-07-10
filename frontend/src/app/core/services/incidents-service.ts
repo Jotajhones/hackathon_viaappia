@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 export class IncidentsService {
 
     private http = inject(HttpClient);
-    private apiUrl = environment.API_URL;
+    private apiUrl = `${environment.API_BASE_URL}/incidents`;
 
     findAll(page: number = 0, size: number = 20): Observable<any> {
 
@@ -24,17 +24,17 @@ export class IncidentsService {
     }
 
     update(incident: any) {
-        let url = this.apiUrl + "/" + incident.id;
+        let url = `${this.apiUrl}/${incident.id}`;
         return this.http.put(url, incident);
     }
 
     delete(id: any) {
-        let url = this.apiUrl + "/" + id;
+      let url = `${this.apiUrl}/${id}`;
         return this.http.delete(url);
     }
 
     findById(id: any) {
-        let url = this.apiUrl + "/" + id;
+      let url = `${this.apiUrl}/${id}`;
         return this.http.get(url);
     }
 

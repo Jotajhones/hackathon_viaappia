@@ -13,14 +13,14 @@
 
 h1 {
     font-size: 2.2rem;
-    color: #1e293b;
+    color: var(--text-nf-darker);
     margin: 0 0 1rem 0;
     font-weight: 800;
 }
 
 p {
     font-size: 1.1rem;
-    color: #475569;
+    color: var(--text-nf-lighter);
     line-height: 1.6;
     margin: 0 0 2rem 0;
 }

@@ -8,5 +8,5 @@ import com.viaappia.api.entity.StatusIncidents;
 public record StatsDTO(
     Map<StatusIncidents, Long> status,
     Map<PrioridadeIncidents, Long> prioridade,
-    long ocorrências
+    long ocorrencias
 ) {}

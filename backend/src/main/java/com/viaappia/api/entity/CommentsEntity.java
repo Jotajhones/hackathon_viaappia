@@ -14,6 +14,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,10 +34,15 @@ public class CommentsEntity {
     @JoinColumn(name = "incident_id", nullable = false)
     private IncidentsEntity incident;
 
-    @Column(nullable = false, updatable = false)
+    @Email(message = "Formato de e-mail inválido")
+    @NotBlank(message = "O autor é obrigatório")
+    @Size(max = 255, message = "O autor deve ter no máximo 255 caracteres")
+    @Column(nullable = false, updatable = false, length = 255)
     private String autor;
 
-    @Column(nullable = false)
+    @NotBlank(message = "A mensagem é obrigatória")
+    @Size(max = 2000, message = "A mensagem deve ter no máximo 2000 caracteres")
+    @Column(nullable = false, length = 2000)
     private String mensagem;
 
     @CreationTimestamp

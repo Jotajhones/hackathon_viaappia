@@ -22,4 +22,17 @@ spring:
   flyway:
     enabled: true
   cache:
-    type: simple
+    type: caffeine
+    caffeine:
+      spec: expireAfterWrite=5m,maximumSize=500
+jwt:  
+  secret: ${JWT_SECURITY}
+  expiration: ${JWT_EXPIRATION} 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: alpha
+  show-actuator: false
+  default-support-for-numeric-inputs: true

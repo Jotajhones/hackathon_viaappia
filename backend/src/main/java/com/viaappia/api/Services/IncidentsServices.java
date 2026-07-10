@@ -27,7 +27,7 @@ public class IncidentsServices {
 
     public Page<IncidentResponseDTO> findAllFiltered(StatusIncidents status, PrioridadeIncidents prioridade, String q,
             Pageable pageable) {
-        String termoBusca = (q != null && !q.isBlank()) ? "%" + q.toLowerCase() + "%" : null;
+        String termoBusca = (q != null && !q.isBlank()) ? "%" + q + "%" : null;
         return this.incidentsRepository.findWithFilters(status, prioridade, termoBusca, pageable).map(mapper::toDTO);
     }
 
@@ -71,5 +71,4 @@ public class IncidentsServices {
         return this.incidentsRepository.findIncidentById(id)
                 .orElseThrow(() -> new RuntimeException("Incidente não encontrado"));
     }
-
 }

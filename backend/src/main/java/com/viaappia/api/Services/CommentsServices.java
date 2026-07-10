@@ -25,7 +25,7 @@ public class CommentsServices {
     private final CommentsMapper mapper;
 
     public Page<CommentResponseDTO> findByIncident_Id(UUID incidentId, String q, Pageable pageable) {
-        String termoBusca = (q != null && !q.isBlank()) ? "%" + q.toLowerCase() + "%" : null;
+        String termoBusca = (q != null && !q.isBlank()) ? "%" + q + "%" : null;
         return this.commentsRepository.findByIncident_Id(incidentId, termoBusca, pageable).map(mapper::toDTO);
     }
 

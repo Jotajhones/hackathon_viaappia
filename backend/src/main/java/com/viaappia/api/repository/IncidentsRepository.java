@@ -19,7 +19,7 @@ public interface IncidentsRepository extends JpaRepository<IncidentsEntity, UUID
         @Query("SELECT i FROM IncidentsEntity i WHERE " +
                         "(:status IS NULL OR i.status = :status) AND " +
                         "(:prioridade IS NULL OR i.prioridade = :prioridade) AND " +
-                        "(:q IS NULL OR LOWER(i.titulo) LIKE :q OR LOWER(i.descricao) LIKE :q)")
+                        "(:q IS NULL OR i.titulo ILIKE :q OR i.descricao ILIKE :q)")
         Page<IncidentsEntity> findWithFilters(
                         @Param("status") StatusIncidents status,
                         @Param("prioridade") PrioridadeIncidents prioridade,

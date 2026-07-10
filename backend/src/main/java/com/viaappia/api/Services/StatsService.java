@@ -16,20 +16,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StatsService {
 
-    private final IncidentsRepository ir;
+    private final IncidentsRepository incidentRepository;
 
     public StatsDTO getIncidentsStats() {
         Map<StatusIncidents, Long> statusMap = new HashMap<>();
         for (StatusIncidents status : StatusIncidents.values()) {
-            statusMap.put(status, ir.countByStatus(status));
+            statusMap.put(status, incidentRepository.countByStatus(status));
         }
 
         Map<PrioridadeIncidents, Long> prioridadeMap = new HashMap<>();
         for (PrioridadeIncidents prioridade : PrioridadeIncidents.values()) {
-            prioridadeMap.put(prioridade, ir.countByPrioridade(prioridade));
+            prioridadeMap.put(prioridade, incidentRepository.countByPrioridade(prioridade));
         }
 
-        long total = ir.count();
+        long total = incidentRepository.count();
 
         return new StatsDTO(statusMap, prioridadeMap, total);
     }

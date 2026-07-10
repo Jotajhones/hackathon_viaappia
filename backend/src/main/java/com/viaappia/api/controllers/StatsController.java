@@ -1,6 +1,7 @@
 package com.viaappia.api.controllers;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@Tag(name = "Stats", description = "Endpoints para dados estatísticos e métricas")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/stats")
@@ -20,6 +21,7 @@ public class StatsController {
 
     private final StatsService services;
 
+    @Operation(summary = "Obter estatísticas de incidentes", description = "Retorna um consolidado com os números e métricas gerais dos incidentes")
     @GetMapping("/incidents") 
     public ResponseEntity<StatsDTO> getIncidentsStats() {
         StatsDTO stats = this.services.getIncidentsStats();

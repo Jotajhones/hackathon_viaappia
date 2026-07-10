@@ -12,11 +12,11 @@ import com.viaappia.api.entity.CommentsEntity;
 
 public interface CommentsRepository extends JpaRepository<CommentsEntity, UUID> {
 
-    @Query("SELECT c FROM CommentsEntity c WHERE " +
-            "c.incident.id = :incidentId AND " +
-            "(:q IS NULL OR LOWER(c.autor) LIKE :q OR LOWER(c.mensagem) LIKE :q)")
-    Page<CommentsEntity> findByIncident_Id(
-            @Param("incidentId") UUID incidentId,
-            @Param("q") String q,
-            Pageable pageable);
+@Query("SELECT c FROM CommentsEntity c WHERE " +
+        "c.incident.id = :incidentId AND " +
+        "(:q IS NULL OR c.autor ILIKE %:q% OR c.mensagem ILIKE %:q%)")
+Page<CommentsEntity> findByIncident_Id(
+        @Param("incidentId") UUID incidentId,
+        @Param("q") String q,
+        Pageable pageable);
 }

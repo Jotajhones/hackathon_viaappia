@@ -24,7 +24,7 @@ spring:
   cache:
     type: caffeine
     caffeine:
-      spec: expireAfterWrite=5m,maximumSize=500
+      spec:  maximumSize=10000,expireAfterWrite=60s
 jwt:  
   secret: ${JWT_SECURITY}
   expiration: ${JWT_EXPIRATION} 
@@ -35,4 +35,4 @@ springdoc:
     path: /swagger-ui.html
     operationsSorter: alpha
   show-actuator: false
-  default-support-for-numeric-inputs: true
+  default-support-for-numeric-inputs: true 

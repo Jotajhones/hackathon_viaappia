@@ -34,7 +34,6 @@ public class CommentsEntity {
     @JoinColumn(name = "incident_id", nullable = false)
     private IncidentsEntity incident;
 
-    @Email(message = "Formato de e-mail inválido")
     @NotBlank(message = "O autor é obrigatório")
     @Size(max = 255, message = "O autor deve ter no máximo 255 caracteres")
     @Column(nullable = false, updatable = false, length = 255)

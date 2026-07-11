@@ -1,20 +1,26 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DatePipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Router } from '@angular/router';
 import { Incidents } from '../../core/models/incidents-model';
 import { IncidentsService } from '../../core/services/incidents-service';
 import { ModalService } from '../../core/services/modal-service';
 import { StatsService } from '../../core/services/stats-service';
-import { getAwaistTime, dateConverter } from '../../core/utils/tratamento-datas';
-import { capitalize } from '../../core/utils/capitalize';
+import { dateConverter } from '../../core/utils/tratamento-datas';
 import { stringToArray } from '../../core/utils/stringToArray';
 import { PageableComponent } from "../../shared/pageable-component/pageable-component";
 import { SearchbarComponent } from "../../shared/searchbar-component/searchbar-component";
+import { CardIncidentComponent } from "../../shared/card-incident-component/card-incident-component";
 
 @Component({
   selector: 'app-workspace-page',
-  imports: [ReactiveFormsModule, NgClass, PageableComponent, SearchbarComponent, DatePipe],
+  imports: [
+    ReactiveFormsModule,
+    NgClass,
+    PageableComponent,
+    SearchbarComponent,
+    CardIncidentComponent
+  ],
   templateUrl: './workspace-page.html',
   styleUrl: './workspace-page.css',
 })
@@ -35,7 +41,6 @@ export class WorkspacePage implements OnInit {
   totalItens: number = 0;
   totalPaginas: number = 0;
   dataAtual = new Date();
-  stats: any;
 
   incident = new FormGroup({
     id: new FormControl({ value: '', disabled: true }, [Validators.required]),
@@ -57,13 +62,23 @@ export class WorkspacePage implements OnInit {
 
   ngOnInit(): void {
     this.filtrosForm.valueChanges.subscribe(() => {
-      this.paginaAtual = 0;
-      this.incidentsFindAll();
-      this.findStats();
+      this.recarregarWorkspace(true, false);
     });
 
+    this.recarregarWorkspace(false, false);
+  }
+
+  recarregarWorkspace(voltarParaInicio: boolean = false, limparFormulario: boolean = false) {
+    if (limparFormulario) {
+      this.resetForm();
+    }
+    
+    if (voltarParaInicio) {
+      this.paginaAtual = 0;
+    }
+
     this.incidentsFindAll();
-    this.findStats();
+    this.statsService.loadStats();
   }
 
   incidentsFindAll(): void {
@@ -89,132 +104,52 @@ export class WorkspacePage implements OnInit {
           this.totalPaginas = res.page.totalPages;
         }
       },
-      error: (err) => {
-        this.modalService.exibir({
-          tipo: "erro",
-          titulo: "Falha de conexão",
-          mensagem: "Não foi possivel se comunicar com o serviço que fornece os dados."
-        });
-        console.error('Erro na requisição de incidentes:', err);
-      }
-    });
-  }
-
-  findStats() {
-    this.statsService.findStats().subscribe({
-      next: (res) => {
-        this.stats = res;
-      },
-      error: (err) => {
-        this.modalService.exibir({
-          tipo: "erro",
-          titulo: err.error?.type || "Erro",
-          mensagem: err.error?.message || "Ocorreu um erro inesperado."
-        });
-        console.error(err);
-      }
+      error: (err) => this.modalService.exibirErro(err, "Falha de conexão", "Não foi possível se comunicar com o serviço que fornece os dados.")
     });
   }
 
   incidentsCreate() {
-    this.modalService.exibir({
-      tipo: 'loading',
-      titulo: '',
-      mensagem: 'Carregando...'
-    });
+    this.modalService.exibir({ tipo: 'loading', titulo: '', mensagem: 'Carregando...' });
 
     const formValues: any = { ...this.incident.value };
     formValues.tags = stringToArray(formValues.tags);
 
     this.incidentsService.create(formValues).subscribe({
-      next: (res) => {
-        this.modalService.exibir({
-          tipo: "sucesso",
-          titulo: "Sucesso",
-          mensagem: "Incidente criado com êxito!"
-        });
-
-        this.resetForm();
-        this.paginaAtual = 0;
-        this.incidentsFindAll();
-        this.findStats();
+      next: () => {
+        this.modalService.exibir({ tipo: "sucesso", titulo: "Sucesso", mensagem: "Incidente criado com êxito!" });
+        this.recarregarWorkspace(true, true);
       },
-      error: (err) => {
-        this.modalService.exibir({
-          tipo: "erro",
-          titulo: err.error?.type || "Erro",
-          mensagem: err.error?.message || "Ocorreu um erro inesperado."
-        });
-        console.error(err);
-      }
+      error: (err) => this.modalService.exibirErro(err)
     });
   }
 
   incidentsUpdate(): any {
-    this.modalService.exibir({
-      tipo: 'loading',
-      titulo: '',
-      mensagem: 'Carregando...'
-    });
+    this.modalService.exibir({ tipo: 'loading', titulo: '', mensagem: 'Carregando...' });
 
     const formValues: any = this.incident.getRawValue();
     formValues.tags = stringToArray(formValues.tags);
 
     this.incidentsService.update(formValues).subscribe({
-      next: (res) => {
-        this.modalService.exibir({
-          tipo: "sucesso",
-          titulo: "Sucesso",
-          mensagem: "Incidente atualizado com êxito!"
-        });
-
-        this.resetForm();
-        this.paginaAtual = 0;
-        this.incidentsFindAll();
-        this.findStats();
+      next: () => {
+        this.modalService.exibir({ tipo: "sucesso", titulo: "Sucesso", mensagem: "Incidente atualizado com êxito!" });
+        this.recarregarWorkspace(true, true);
       },
-      error: (err) => {
-        this.modalService.exibir({
-          tipo: "erro",
-          titulo: err.error?.type || "Erro",
-          mensagem: err.error?.message || "Ocorreu um erro inesperado."
-        });
-        console.error(err);
-      }
+      error: (err) => this.modalService.exibirErro(err)
     });
   }
 
   incidentDelete(): any {
-    this.modalService.exibir({
-      tipo: 'loading',
-      titulo: '',
-      mensagem: 'Carregando...'
-    });
+    this.modalService.exibir({ tipo: 'loading', titulo: '', mensagem: 'Carregando...' });
 
     const formValues = this.incident.getRawValue();
 
     this.incidentsService.delete(formValues.id).subscribe({
-      next: (res) => {
-        this.modalService.exibir({
-          tipo: "sucesso",
-          titulo: "Sucesso",
-          mensagem: "Incidente deeletado com êxito!"
-        });
-
-        this.resetForm();
-        this.paginaAtual = 0;
-        this.incidentsFindAll();
-        this.findStats();
+      next: () => {
+        this.modalService.exibir({ tipo: "sucesso", titulo: "Sucesso", mensagem: "Incidente deletado com êxito!" });
+        this.recarregarWorkspace(true, true);
       },
-      error: (err) => {
-        this.modalService.exibir({
-          tipo: "erro",
-          titulo: err.error?.type || "Erro",
-          mensagem: err.error?.message || "Ocorreu um erro inesperado."
-        });
-        console.error(err);
-      }
-    })
+      error: (err) => this.modalService.exibirErro(err)
+    });
   }
 
   selectIncident(selectedIncident: any) {
@@ -238,21 +173,12 @@ export class WorkspacePage implements OnInit {
 
   searchReceiver(termo: string) {
     this.termoDaBusca = termo;
-    this.paginaAtual = 0;
-    this.incidentsFindAll();
+    this.recarregarWorkspace(true, false);
   }
 
   getNewPage(novaPagina: number) {
     this.paginaAtual = novaPagina;
-    this.incidentsFindAll();
-  }
-
-  beautyTime(data: Date): any {
-    return getAwaistTime(data);
-  }
-
-  beautyString(palavra: string): string {
-    return capitalize(palavra);
+    this.recarregarWorkspace(false, false);
   }
 
   goToCommentsPageById(id: string) {

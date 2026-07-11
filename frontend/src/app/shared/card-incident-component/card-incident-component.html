@@ -1,0 +1,46 @@
+@if (incident()) {
+    <div class="incident-card" (click)="onClick()" (dblclick)="onDoubleClick()">
+        <div class="card-header">
+            <span class="card-id-status">
+                <span class="cars-status">{{beautyString(incident().status)}}</span>
+                <span class="card-id">#{{incident().id}}</span>
+            </span>
+
+            @if(incident().status !== "CANCELADA" && incident().status !== "RESOLVIDA") {
+                <span class="card-prioridade-line">
+                    <span class="card-prioridade">{{incident().prioridade}}</span>
+                    <div class="card-prioridade-tag" [ngClass]="incident().prioridade"></div>
+                </span>
+            }
+        </div>
+
+        <div class="card-title">{{incident().titulo}}</div>
+        <div class="card-desc">{{incident().descricao}}</div>
+        <div class="card-tags">{{incident().tags}}</div>
+
+        <div class="card-footer">
+            <span>{{incident().responsavel}}</span>
+            <span>Abertura há {{beautyTime(incident().dataAbertura)}}</span>
+            <span>Última Atualização há {{beautyTime(incident().dataAtualizacao)}}</span>
+        </div>
+    </div>
+} @else {
+    <div class="incident-card">
+        <div class="card-header">
+            <span class="card-id-status">
+                <span class="card-status"></span>
+                <span class="card-id">#-204-204-204-204</span>
+            </span>
+        </div>
+
+        <div class="card-title">Ops! ¯\_(ツ)_/¯</div>
+        <div class="card-desc">Parece que não existe correspondência para a sua pesquisa</div>
+        <div class="card-tags">204</div>
+
+        <div class="card-footer">
+            <span></span>
+            <span></span>
+            <span>Última atualização - {{dataAtual() | date:'d MMM yy - HH:mm'}}</span>
+        </div>
+    </div>
+}

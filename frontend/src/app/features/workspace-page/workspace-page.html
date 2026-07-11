@@ -1,31 +1,11 @@
-<div class="stats-container">
-    @if (stats) {
-        <div class="stat-item total">Ocorrências: <strong>{{ stats.ocorrencias }}</strong></div>
-        
-        <div class="stat-group">
-            <span class="group-title">Status:</span>
-            <span class="badge aberta">Aberta: {{ stats.status.ABERTA }}</span>
-            <span class="badge andamento">Andamento: {{ stats.status.EM_ANDAMENTO }}</span>
-            <span class="badge cancelada">Cancelada: {{ stats.status.CANCELADA }}</span>
-            <span class="badge resolvida">Resolvida: {{ stats.status.RESOLVIDA }}</span>
-        </div>
 
-        <div class="stat-group">
-            <span class="group-title">Prioridade:</span>
-            <span class="badge ALTA">Alta: {{ stats.prioridade.ALTA }}</span>
-            <span class="badge MEDIA">Média: {{ stats.prioridade.MEDIA }}</span>
-            <span class="badge BAIXA">Baixa: {{ stats.prioridade.BAIXA }}</span>
-        </div>
-    } @else {
-        <span class="group-title">Carregando...</span>
-    }
-</div>
-
+<!-- header secundario -->
 <header class="filter-container">
     <div class="align-container">
-        
+
+        <!-- filtros de select -->
         <form [formGroup]="filtrosForm" class="filter-box">
-    
+
             <div class="filtro-grupo status-grupo">
                 <label for="statusSelect">Filtrar status:</label>
                 <select id="statusSelect" formControlName="status">
@@ -51,13 +31,13 @@
                 <label for="dateSelect">Ordenar:</label>
                 <select id="dateSelect" formControlName="sort">
                     <option [ngValue]="null">Limpar filtro</option>
-                    
+
                     <optgroup label="Data de Abertura">
                         <option value="dataAbertura,asc">Mais antigas</option>
                         <option value="dataAbertura,desc">Mais recentes</option>
                     </optgroup>
-                    
-                    <optgroup label="Data de Atualização">                    
+
+                    <optgroup label="Data de Atualização">
                         <option value="dataAtualizacao,asc">Mais antigas</option>
                         <option value="dataAtualizacao,desc">Mais recentes</option>
                     </optgroup>
@@ -65,28 +45,24 @@
             </div>
         </form>
 
-        <app-searchbar-component 
-        (termoBuscado)="searchReceiver($event)">
+        <app-searchbar-component (termoBuscado)="searchReceiver($event)">
         </app-searchbar-component>
-        
+
     </div>
 </header>
 
+<!-- container pai do formulario e lista -->
 <div class="workspace-page">
 
+    <!-- formulario -->
     <form [formGroup]="incident">
         <div class="form-header">
             <label>#
-                <input 
-                type="text" 
-                formControlName="id" 
-                placeholder="0000">
+                <input type="text" formControlName="id" placeholder="0000">
             </label>
 
             <label>Abertura
-                <input 
-                type="datetime-local" 
-                formControlName="dataAbertura">
+                <input type="datetime-local" formControlName="dataAbertura">
             </label>
 
             <label>Última Atualização
@@ -116,10 +92,9 @@
 
         <div class="form-select-group">
             <label>Prioridade:
-                <select 
-                formControlName="prioridade"
-                [ngClass]="{'input-error': incident.get('prioridade')?.invalid && incident.get('prioridade')?.touched}">
-                    
+                <select formControlName="prioridade"
+                    [ngClass]="{'input-error': incident.get('prioridade')?.invalid && incident.get('prioridade')?.touched}">
+
                     <option value="" selected disabled>Selecione um valor</option>
                     <option value="BAIXA">Baixa</option>
                     <option value="MEDIA">Média</option>
@@ -128,9 +103,8 @@
             </label>
 
             <label>Status:
-                <select 
-                formControlName="status"
-                [ngClass]="{'input-error': incident.get('status')?.invalid && incident.get('status')?.touched}">
+                <select formControlName="status"
+                    [ngClass]="{'input-error': incident.get('status')?.invalid && incident.get('status')?.touched}">
 
                     <option value="" selected disabled>Selecione um valor</option>
                     <option value="ABERTA">Aberta</option>
@@ -156,18 +130,20 @@
         </label>
 
         <div class="form-button-container">
+
             @if(btnController) {
-            <button 
-            type="button" 
+            
+            <button type="button" 
             class="button" 
             [disabled]="incident.invalid"
             (click)="incidentsCreate()">Salvar</button>
+            
             } @else {
 
             <button 
-            type="button" class="button" 
-            (click)="resetForm()"
-            >Limpar</button>
+            type="button" 
+            class="button" 
+            (click)="resetForm()">Limpar</button>
 
             <button 
             type="button" 
@@ -180,77 +156,41 @@
             class="button delete" 
             (click)="incidentDelete()">Excluir</button>
             }
-            
+
         </div>
     </form>
 
+    <!-- container dos incidents -->
     <section class="incidents-container">
+
         <div class="incidents-container-head">
             <h3>Tickets Recentes</h3>
 
-            <app-pageable-component [paginaAtual]="paginaAtual" [totalPaginas]="totalPaginas" [totalItens]="totalItens"
-                (mudarPagina)="getNewPage($event)">
+            <app-pageable-component 
+            [paginaAtual]="paginaAtual" 
+            [totalPaginas]="totalPaginas" 
+            [totalItens]="totalItens"
+            (mudarPagina)="getNewPage($event)">
             </app-pageable-component>
 
         </div>
+        
         <div class="incidents-list">
+            @for(item of incidentsList(); track item.id) {
 
-            @for(incident of incidentsList(); track incident.id) {
-
-            <div class="incident-card" 
-            (click)="selectIncident(incident)" 
-            (dblclick)="goToCommentsPageById(incident.id)">
-                <div class="card-header">
-                    <span class="card-id-status">
-                        <span class="cars-status">
-                            {{beautyString(incident.status)}}</span>
-                        <span class="card-id">#{{incident.id}}</span>
-                    </span>
-
-                    @if(incident.status !== "CANCELADA" && incident.status !== "RESOLVIDA") {
-
-                    <span class="card-prioridade-line">
-                        <span class="card-prioridade">{{incident.prioridade}}</span>
-                        <div class="card-prioridade-tag" [ngClass]="incident.prioridade"></div>
-                    </span>
-                    }
-                </div>
-
-                <div class="card-title">{{incident.titulo}}</div>
-                <div class="card-desc">{{incident.descricao}}</div>
-                <div class="card-tags">{{incident.tags}}</div>
-
-                <div class="card-footer">
-                    <span>{{incident.responsavel}}</span>
-                    <span>Abertura há {{beautyTime(incident.dataAbertura)}}</span>
-                    <span>Última Atualização há {{beautyTime(incident.dataAtualizacao )}}</span>
-                </div>
-            </div>
+                <app-card-incident-component 
+                    [incident]="item" 
+                    (cardClick)="selectIncident($event)"
+                    (cardDoubleClick)="goToCommentsPageById($event)">
+                </app-card-incident-component>
 
             } @empty {
 
-            <div class="incident-card">
-                <div class="card-header">
-                    <span class="card-id-status">
-                        <span class="card-status"></span>
-                        <span class="card-id">#-204-204-204-204</span>
-                    </span>
-                </div>
-
-                <div class="card-title">Ops! ¯\_(ツ)_/¯</div>
-                <div class="card-desc">Parece que não existe correspondência para a sua pesquisa</div>
-                <div class="card-tags">204</div>
-
-                <div class="card-footer">
-                    <span></span>
-                    <span></span>
-                    <span>Última atualização - {{dataAtual | date:'d MMM yy - HH:mm'}}</span>
-                </div>
-            </div>
+                <app-card-incident-component [dataAtual]="dataAtual">
+                </app-card-incident-component>
 
             }
-            
-        </div>
+        </div> 
 
     </section>
 </div>

@@ -1,0 +1,23 @@
+@if (comment()) {
+  <div class="incident-card">
+      <div class="card-header">
+          <span class="card-autor">{{comment().autor}}</span>
+          <span class="card-date">{{comment().dataCriacao | date:'d MMM yy - HH:mm'}}</span>
+      </div>
+      <div class="card-desc">{{comment().mensagem}}</div>
+      <div class="card-footer">
+          <span></span>
+      </div>
+  </div>
+} @else {
+  <div class="incident-card">
+      <div class="card-header">
+          <span class="card-autor">Não Existem comentarios</span>
+          <span class="card-date">{{dataAtual() | date:'d MMM yy - HH:mm'}}</span>
+      </div>
+      <div class="card-desc">¯\_(ツ)_/¯</div>
+      <div class="card-footer">
+          <span></span>
+      </div>
+  </div>
+}

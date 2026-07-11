@@ -1,5 +1,5 @@
-:root {
-
+:root,
+[data-theme="claro"] {
     /* Backgrounds */
     --body-bg-color: #e4edf3;
     --input-bg-color: #c7ddee;
@@ -16,7 +16,8 @@
     --ui-sec-bright: #007bff;
 
     /* fonts  */
-    --text-white: #ffffff; 
+    --text-contrast: #000;
+    --text-white: #ffffff;
     --font-sec-color: #FAF9FD;
     --text-darker: #333333;
     --text-dark: #444444;
@@ -36,7 +37,7 @@
     --priority-low: #198754;
 
     /* Ocorrencias Status */
-    --status-open: #343a40;
+    --status-open: #6ba4ff;
     --status-progress: #000000;
     --status-resolved: rgb(45, 78, 167);
     --status-canceled: #6c757d;
@@ -51,11 +52,11 @@
     /* Modal */
     --success-color: #2e7d32;
     --warning-color: #ed6c02;
-    --error-color: #d32f2f; 
-    --overlay-bg: rgba(0, 0, 0, 0.6); 
-    --modal-shadow: rgba(0, 0, 0, 0.4); 
+    --error-color: #d32f2f;
+    --overlay-bg: rgba(0, 0, 0, 0.6);
+    --modal-shadow: rgba(0, 0, 0, 0.4);
     --border-light: rgba(0, 0, 0, 0.1);
-    
+
     /* Paginador */
     --text-neutral: #4a4a4a;
     --bg-off-white: #fcfcfc;
@@ -65,6 +66,56 @@
     --border-gray: #ccc;
     --border-gray-dark: #bbb;
     --border-disabled-light: #e6e6e6;
+}
+
+[data-theme="escuro"] {
+    /* Backgrounds  */
+    --body-bg-color: #202020;
+    --input-bg-color: #4D4D4D;
+    --ui-bg-color: #363636;
+    --bg-light: #333333;
+    --bg-lighter: #2a2a2a;
+    --card-bg-light: #4D4D4D;
+    --ui-sec-focus-2: #616161;
+
+    /* Interface */
+    --ui-sec: rgb(0, 139, 203);
+    --ui-sec-hover: rgb(24, 131, 231);
+
+    /* Fonts  */
+    --text-contrast: #ffffff;
+    --text-darker: #ffffff;
+    --text-dark: #ffffffd2;
+    --text-dark-muted: #e0e0e0;
+    --text-primary: #ffffffd2;
+    --text-muted: #cccccc;
+    --text-muted-light: #bbbbbb;
+    --text-gray-dark: #aaaaaa;
+    --text-gray-light: #999999;
+    --text-secondary: #dddddd;
+    --text-nf-darker: #ffffff;
+    --text-nf-lighter: #e2e8f0;
+
+    /* Ocorrencias Status */
+    --status-open: #6ba4ff;
+    --status-progress: #ffd166;
+    --status-resolved: #46df7a;
+    --status-canceled: #94a3b8;
+
+    /* Paginador escuro */
+    --text-neutral: #ffffffd2;
+    --bg-off-white: #2b2b2b;
+    --bg-hover-light: #4D4D4D;
+    --bg-disabled-light: #202020;
+    --border-gray-light: #444444;
+    --border-gray: #555555;
+    --border-gray-dark: #666666;
+    --border-disabled-light: #333333;
+
+    /* Sombras escuro */
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --modal-shadow: rgba(0, 0, 0, 0.7);
+    --border-light: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -124,6 +175,7 @@ input[type="email"] {
     background-color: var(--input-bg-color);
     padding-inline: 8px;
     transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    color: var(--text-contrast);
 }
 
 input[type="text"]:focus,
@@ -131,20 +183,28 @@ input[type="password"]:focus,
 input[type="search"]:focus,
 input[type="email"]:focus {
     border: 2px solid var(--ui-sec);
-    background-color: var(--ui-sec-focus-2);
+    background-color: var(--input-bg-color);
+    color: var(--text-contrast);
 }
 
 form select,
 form textarea,
 input[type="select"],
+input[type="datetime-local"],
 #dateSelect,
 .comment-form textarea {
     width: 100%;
     padding: 5px 10px;
     border: none;
     outline: none;
+    background-color: var(--input-bg-color);
     border: 2px solid var(--input-bg-color);
     border-radius: 4px;
+    color: var(--text-contrast);
+}
+
+label {
+    color: var(--text-contrast);
 }
 
 .input-error {
@@ -154,6 +214,14 @@ input[type="select"],
 
 label:has(.input-error) {
     color: var(--error-text) !important;
+}
+
+.error-text {
+    color: var(--danger-color);
+    font-size: 0.8rem;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    display: block;
 }
 
 /* Layout principal das telas */

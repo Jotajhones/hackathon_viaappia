@@ -1,0 +1,34 @@
+.incident-card {
+    background-color: var(--card-bg-light);
+    border: 1px solid var(--bg-light);
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-gray-dark);
+}
+
+.card-desc {
+    font-size: 14px;
+    color: var(--text-darker);
+    line-height: 1.4;
+}
+
+.card-footer {
+    font-size: 11px;
+    color: var(--text-gray-light);
+    text-align: right;
+}
+
+.card-autor {
+    color: var(--ui-sec);
+    font-size: medium;
+}

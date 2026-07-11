@@ -1,15 +1,44 @@
 <header>
-    <img src="document.png" alt="icone de pasta arquivo azul">
+    <section class="align-container">
+        <div class="header-left">
+            <img src="document.png" alt="icone de pasta arquivo azul">
+            <nav>
+                <ul>
+                    <li><a routerLink="/workspace" routerLinkActive="active"
+                            [routerLinkActiveOptions]="{exact: true}">Workspace</a>
+                    </li>
+                    <li [class.hidden]="!rlaComentarios.isActive">
+                        <a routerLink="/comments" routerLinkActive="active"
+                            #rlaComentarios="routerLinkActive">Comentários</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
 
-    <nav>
-        <ul>
-            <li><a routerLink="/workspace" routerLinkActive="active"
-                    [routerLinkActiveOptions]="{exact: true}">Workspace</a>
-            </li>
+        <!-- conteiner de stats -->
+        <app-stats-conteiner [stats]="statsService.stats()"></app-stats-conteiner>
 
-            <li [class.hidden]="!rlaComentarios.isActive">
-                <a routerLink="/comments" routerLinkActive="active" #rlaComentarios="routerLinkActive">Comentários</a>
-            </li>
-        </ul>
-    </nav>
+        <div class="header-right">
+            <div class="email-container">
+                @if(userEmail) {
+                <div>
+                    {{userEmail}}
+                </div>
+                }
+            </div>
+            <div class="img-container">
+                <img
+                (click)="logout()"
+                title="Sair/Logout"
+                src="user-logout.png"
+                alt="Icone e interface, pessoas com set para a direita user logout">
+                <img
+                (click)="alterarTema()"
+                title="Alterar tema"
+                src="contrast.png"
+                alt="Icone de interface, sol em duas cores preto e branco.">
+            </div>
+        </div>
+    </section>
+
 </header>

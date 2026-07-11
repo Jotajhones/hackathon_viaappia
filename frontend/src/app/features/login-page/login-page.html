@@ -16,17 +16,42 @@ Página da Fonte: https://img1.wallspic.com/crops/9/7/8/9/29879/29879-particle-s
         <img class="img-direita" src="logo-senac-menu-web.png" alt="Logo do Senac">
     </div>
 
-    <div class="login-container">
+    <form [formGroup]="loginForm" class="login-container" (ngSubmit)="onSubmit()">
 
         <label>Email:
-            <input type="email" placeholder="Insira seu login de acesso" class="login-input">
+            <input 
+                type="email" 
+                formControlName="email"
+                placeholder="Insira seu login de acesso" 
+                class="login-input"
+                [class.input-error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
         </label>
+
+        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+            <span class="error-text">
+                @if (loginForm.get('email')?.hasError('required')) { O email é obrigatório }
+                @if (loginForm.get('email')?.hasError('email')) { Digite um email válido }
+            </span>
+        }
 
         <label>Senha:
-            <input type="password" placeholder="Insira sua senha" class="login-input">
+            <input 
+                type="password" 
+                formControlName="password"
+                placeholder="Insira sua senha" 
+                class="login-input"
+                [class.input-error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
         </label>
 
-        <button class="button login-button" routerLink="/workspace">Entrar</button>
-    </div>
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <span class="error-text">
+                @if (loginForm.get('password')?.hasError('required')) { A senha é obrigatória }
+            </span>
+        }
+
+        <button type="submit" class="button login-button" [disabled]="loginForm.invalid">
+            Entrar
+        </button>
+    </form>
 
 </div>

@@ -36,7 +36,8 @@ h1 {
 }
 
 .login-container {
-    color: var(--ui-bg-color);
+    background-color: var(--ui-bg-color);
+    color: var(--ui-sec);
     display: flex;
     flex-direction: column;
     align-items: center;

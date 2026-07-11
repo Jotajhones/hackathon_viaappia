@@ -5,9 +5,50 @@ header {
     border-bottom: 2px solid var(--ui-sec);
     display: flex;
     align-items: center;
-    gap: 20px;
     box-shadow: 3px 0px 3px 3px rgba(0, 0, 0, 0.2);
 }
+
+.align-container {
+    max-width: 1360px;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.email-container {
+    white-space: nowrap;       
+    overflow: hidden;          
+    text-overflow: ellipsis;   
+    max-width: 200px;
+    font-weight: bold;
+    color: var(--ui-sec);
+}
+
+.img-container {
+    display: flex;
+    gap: 20px;
+}
+
+.img-container img {
+    width: 30px;
+    cursor: pointer;
+    animation: all ease-in-out 0.3s;
+}
+
+.img-container img:hover {
+    transform: scale(1.1);
+}
+
 
 header img {
     width: 32px;

@@ -1,29 +1,28 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { DatePipe, NgClass } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, FormGroup, Validators, ReactiveFormsModule, ɵInternalFormsSharedModule } from '@angular/forms';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { SearchbarComponent } from "../../shared/searchbar-component/searchbar-component";
 import { PageableComponent } from "../../shared/pageable-component/pageable-component";
 import { ModalService } from '../../core/services/modal-service';
 import { CommentsService } from '../../core/services/comments-service';
 import { CommentModel } from '../../core/models/comments-model';
 import { capitalize } from '../../core/utils/capitalize';
-
+import { CardCommentComponent } from '../../shared/card-comment-component/card-comment-component';
 
 @Component({
   selector: 'app-comments-page',
   imports: [
     SearchbarComponent, 
     NgClass, 
-    PageableComponent, 
-    DatePipe, 
-    ɵInternalFormsSharedModule, 
-    ReactiveFormsModule
+    PageableComponent,  
+    ReactiveFormsModule,
+    CardCommentComponent
   ],
   templateUrl: './comments-page.html',
   styleUrl: './comments-page.css',
 })
-export class CommentsPage {
+export class CommentsPage implements OnInit {
 
   private modalService = inject(ModalService);
   private route = inject(ActivatedRoute);
@@ -43,7 +42,6 @@ export class CommentsPage {
   incidetStatus: string = '';
   dataAtual: Date = new Date();
 
-
   comment = new FormGroup({
     autor: new FormControl('', [Validators.required, Validators.maxLength(255)]),
     mensagem: new FormControl('', [Validators.required, Validators.maxLength(2000)])
@@ -52,7 +50,6 @@ export class CommentsPage {
   filtrosForm = new FormGroup({
     sort: new FormControl<string | null>(null)
   });
-
 
   ngOnInit() {
     const data = this.route.snapshot.data['incidentData'];
@@ -97,14 +94,8 @@ export class CommentsPage {
           this.totalPaginas = res.page.totalPages;
         }
       },
-      error: (err) => {
-        this.modalService.exibir({
-          tipo: "erro",
-          titulo: err.error?.type || "Erro",
-          mensagem: err.error?.message || "Ocorreu um erro inesperado."
-        });
-        console.error('Erro na requisição de comentarios:', err);
-      }
+
+      error: (err) => this.modalService.exibirErro(err)
     });
   }
 
@@ -118,32 +109,17 @@ export class CommentsPage {
       return;
     }
 
-    this.modalService.exibir({
-      tipo: 'loading',
-      titulo: '',
-      mensagem: 'Carregando...'
-    });
+    this.modalService.exibir({ tipo: 'loading', titulo: '', mensagem: 'Carregando...' });
 
     const formsValues = this.comment.getRawValue();
 
     this.commentsService.createComment(this.paramId, formsValues).subscribe({
-      next: (res) => {
-        this.modalService.exibir({
-          tipo: "sucesso",
-          titulo: "Sucesso",
-          mensagem: "Comentário criado com êxito!"
-        });
-
+      next: () => {
+        this.modalService.exibir({ tipo: "sucesso", titulo: "Sucesso", mensagem: "Comentário criado com êxito!" });
         this.comment.reset();
         this.findAllComments(this.paramId);
       },
-      error: (err) => {
-        this.modalService.exibir({
-          tipo: "erro",
-          titulo: err.error?.type || "Erro ao comentar",
-          mensagem: err.error?.message || "Não foi possível enviar seu comentário."
-        });
-      }
+      error: (err) => this.modalService.exibirErro(err, "Erro ao comentar", "Não foi possível enviar seu comentário.")
     });
   }
 
@@ -161,5 +137,4 @@ export class CommentsPage {
   beautyString(palavra: string): string {
     return capitalize(palavra);
   }
-
 }

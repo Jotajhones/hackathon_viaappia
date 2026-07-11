@@ -18,4 +18,13 @@ export class ModalService {
     this.isOpen.set(false);
     this.modalData.set(null);
   }
+
+  exibirErro(err: any, tituloPersonalizado?: string, mensagemPersonalizada?: string) {
+    this.exibir({
+      tipo: "erro",
+      titulo: err.error?.type || tituloPersonalizado || "Erro",
+      mensagem: err.error?.message || mensagemPersonalizada || "Ocorreu um erro inesperado."
+    });
+    console.error(err);
+  }
 }

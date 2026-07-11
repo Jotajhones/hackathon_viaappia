@@ -98,28 +98,9 @@
 
         <div class="incidents-list">
             @for(comment of commentsList(); track comment.id) {
-
-            <div class="incident-card">
-                <div class="card-header">
-                    <span class="card-autor">{{comment.autor}}</span>
-                    <span class="card-date">{{comment.dataCriacao | date:'d MMM yy - HH:mm'}}</span>
-                </div>
-                <div class="card-desc">{{comment.mensagem}}</div>
-                <div class="card-footer">
-                    <span></span>
-                </div>
-            </div>
+            <app-card-comment-component [comment]="comment"></app-card-comment-component>
             } @empty {
-            <div class="incident-card">
-                <div class="card-header">
-                    <span class="card-autor">Não Existem comentarios</span>
-                    <span class="card-date">{{dataAtual | date:'d MMM yy - HH:mm'}}</span>
-                </div>
-                <div class="card-desc">¯\_(ツ)_/¯</div>
-                <div class="card-footer">
-                    <span></span>
-                </div>
-            </div>
+            <app-card-comment-component [comment]="null"></app-card-comment-component>
             }
 
         </div>

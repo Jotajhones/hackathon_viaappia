@@ -1,0 +1,22 @@
+<div class="stats-container">
+    @if (stats()) {
+        <div class="stat-item total">Ocorrências: <strong>{{ stats().ocorrencias }}</strong></div>
+        
+        <div class="stat-group">
+            <span class="group-title">Status:</span>
+            <span class="badge aberta">Aberta: {{ stats().status.ABERTA || 0 }}</span>
+            <span class="badge andamento">Andamento: {{ stats().status.EM_ANDAMENTO || 0 }}</span>
+            <span class="badge cancelada">Cancelada: {{ stats().status.CANCELADA || 0 }}</span>
+            <span class="badge resolvida">Resolvida: {{ stats().status.RESOLVIDA || 0 }}</span>
+        </div>
+
+        <div class="stat-group">
+            <span class="group-title">Prioridade:</span>
+            <span class="badge ALTA">Alta: {{ stats().prioridade.ALTA || 0 }}</span>
+            <span class="badge MEDIA">Média: {{ stats().prioridade.MEDIA || 0 }}</span>
+            <span class="badge BAIXA">Baixa: {{ stats().prioridade.BAIXA || 0 }}</span>
+        </div>
+    } @else {
+        <span class="group-title">Carregando stats...</span>
+    }
+</div>

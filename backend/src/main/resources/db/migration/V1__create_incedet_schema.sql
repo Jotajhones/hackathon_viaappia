@@ -5,7 +5,7 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE TABLE users (
     id UUID PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL, -- O tipo continua VARCHAR, o hash entra no INSERT
+    password VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL CHECK (role IN ('ROLE_ADMIN', 'ROLE_READ'))
 );
 

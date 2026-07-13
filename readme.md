@@ -42,6 +42,7 @@ O sistema requer ajustes manuais caso deseje alterar as portas ou as configuraç
 Na raiz do projeto, abra o terminal e execute o comando correspondente ao seu sistema operacional para orquestrar e iniciar os containers:
 
 **Para Linux / macOS:**
+
 ```bash
 sudo docker compose up --build -d
 
@@ -97,3 +98,11 @@ O sistema conta com usuários de teste pré-configurados (senha para todos: `123
 * **Tratamento de Exceções**: Requisições proibidas (403 - Forbidden) retornam ocasionalmente erro 500 no cliente, possivelmente devido à interrupção silenciosa de filtros de segurança.
 * **Compatibilidade**: Layout testado exclusivamente para resoluções de desktop. Telas com resoluções maiores a 1800px e mobile podem não apresentar bom resultado.
 * **Gestão de Usuários**: Não foi adicionada nenhuma rota para cadastro de novos usuários no sistema.
+
+---
+
+## 6. Nota sobre Execução em Ambiente Windows
+
+Fui informado pela banca avaliadora sobre um problema na execução do projeto em ambiente Windows. Em testes locais realizados com o Docker devidamente instalado e renomeando corretamente as variáveis de ambiente, consegui executar o projeto normalmente sem apresentar o mesmo erro.
+
+A única alteração realizada nos arquivos do repositório foi garantir e manter o padrão de quebra de linha dos arquivos `.env` e `.env.example` como **LF** (Line Feed). Essa medida evita que caracteres indesejados (como `\r` do CRLF) sejam interpretados de forma incorreta pelas variáveis de ambiente durante o porte e execução em diferentes sistemas operacionais.
